@@ -58,7 +58,6 @@
 
             <h3 style="margin-top: 2rem;">Manage Announcements</h3>
             <div id="announcementList" class="item-list">
-                <!-- Javascript will load items here -->
                 <p style="padding: 1rem; color: #888;">Loading...</p>
             </div>
         </div>
@@ -78,7 +77,6 @@
             </form>
 
             <h3 style="margin-top: 2rem;">Event List (Manage All)</h3>
-            <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Past events will appear here. Delete them to remove from website.</p>
             <div id="eventList" class="item-list">
                 <p style="padding: 1rem; color: #888;">Loading...</p>
             </div>
@@ -87,19 +85,18 @@
     </div>
 
     <script type="module">
-        import { auth, db, signOut, onAuthStateChanged, collection, addDoc, query, orderBy, onSnapshot, deleteDoc, doc } from './firebase-config.js';
+        import { auth, db, signOut, onAuthStateChanged, collection, addDoc, query, onSnapshot, deleteDoc, doc } from './firebase-config.js';
 
-        // 1. Protect this page (Kick out if not logged in)
+        // 1. Auth Check
         onAuthStateChanged(auth, (user) => {
             if (!user) { window.location.href = "login.html"; }
         });
 
-        // 2. Logout Logic
         document.getElementById('logoutBtn').addEventListener('click', () => {
             signOut(auth).then(() => window.location.href = "login.html");
         });
 
-        // 3. ADD ANNOUNCEMENT
+        // 2. ADD ANNOUNCEMENT
         document.getElementById('announcementForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
@@ -111,7 +108,7 @@
                     dateStr: document.getElementById('annDate').value,
                     ministry: document.getElementById('annMinistry').value,
                     content: document.getElementById('annContent').value,
-                    createdAt: new Date()
+                    createdAt: Date.now() // Using simple timestamp
                 });
                 e.target.reset();
                 alert("Announcement Posted!");
@@ -119,7 +116,7 @@
             btn.innerText = "Post Announcement";
         });
 
-        // 4. ADD EVENT
+        // 3. ADD EVENT
         document.getElementById('eventForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
@@ -132,7 +129,7 @@
                     day: document.getElementById('evtDay').value,
                     time: document.getElementById('evtTime').value,
                     desc: document.getElementById('evtDesc').value,
-                    createdAt: new Date()
+                    createdAt: Date.now()
                 });
                 e.target.reset();
                 alert("Event Added!");
@@ -140,15 +137,25 @@
             btn.innerText = "Add Event";
         });
 
-        // 5. LOAD & DELETE ANNOUNCEMENTS (Real-time)
-        const qAnn = query(collection(db, "announcements"), orderBy("createdAt", "desc"));
+        // 4. LOAD LISTS (FIXED: Removing 'orderBy' to prevent index errors)
+        
+        // Announcements
+        const qAnn = query(collection(db, "announcements"));
         onSnapshot(qAnn, (snapshot) => {
             const list = document.getElementById('announcementList');
             list.innerHTML = "";
-            if (snapshot.empty) { list.innerHTML = "<p style='padding:1rem'>No announcements yet.</p>"; }
             
-            snapshot.forEach(docSnap => {
-                const data = docSnap.data();
+            if (snapshot.empty) { 
+                list.innerHTML = "<p style='padding:1rem'>No announcements found.</p>"; 
+                return;
+            }
+
+            // Convert to array and Sort in Browser (Newest First)
+            let items = [];
+            snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+            items.sort((a, b) => b.createdAt - a.createdAt);
+
+            items.forEach(data => {
                 const div = document.createElement('div');
                 div.className = "list-item";
                 div.innerHTML = `
@@ -156,30 +163,38 @@
                         <strong>${data.title}</strong>
                         <span class="item-meta">${data.ministry} | ${data.dateStr}</span>
                     </div>
-                    <button class="delete-btn" data-id="${docSnap.id}">Delete</button>
+                    <button class="delete-btn" data-id="${data.id}">Delete</button>
                 `;
                 list.appendChild(div);
             });
             
-            // Attach delete events
+            // Re-attach delete listeners
             document.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
-                    if(confirm("Permanently delete this announcement?")) {
+                    if(confirm("Delete this?")) {
                         await deleteDoc(doc(db, "announcements", e.target.dataset.id));
                     }
                 });
             });
         });
         
-        // 6. LOAD EVENTS (Real-time)
-        const qEvt = query(collection(db, "events"), orderBy("createdAt", "desc"));
+        // Events
+        const qEvt = query(collection(db, "events"));
         onSnapshot(qEvt, (snapshot) => {
             const list = document.getElementById('eventList');
             list.innerHTML = "";
-            if (snapshot.empty) { list.innerHTML = "<p style='padding:1rem'>No events found.</p>"; }
+            
+            if (snapshot.empty) { 
+                list.innerHTML = "<p style='padding:1rem'>No events found.</p>"; 
+                return;
+            }
 
-            snapshot.forEach(docSnap => {
-                const data = docSnap.data();
+            // Convert to array and Sort in Browser
+            let items = [];
+            snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+            items.sort((a, b) => b.createdAt - a.createdAt);
+
+            items.forEach(data => {
                 const div = document.createElement('div');
                 div.className = "list-item";
                 div.innerHTML = `
@@ -187,15 +202,14 @@
                         <strong>${data.title}</strong>
                         <span class="item-meta">${data.month} ${data.day} | ${data.time}</span>
                     </div>
-                    <button class="delete-evt-btn delete-btn" data-id="${docSnap.id}">Delete</button>
+                    <button class="delete-evt-btn delete-btn" data-id="${data.id}">Delete</button>
                 `;
                 list.appendChild(div);
             });
             
-            // Attach delete events specific to this list
             document.querySelectorAll('.delete-evt-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
-                    if(confirm("Permanently delete this event?")) {
+                    if(confirm("Delete this event?")) {
                         await deleteDoc(doc(db, "events", e.target.dataset.id));
                     }
                 });
