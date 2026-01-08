@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Give | Tehillah Christian Fellowship</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* --- GIVE PAGE SPECIFIC STYLES --- */
+        
+        /* Scripture Box */
+        .scripture-section {
+            text-align: center;
+            padding: 4rem 10%;
+            background: white;
+        }
+        .scripture-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--dark-bg);
+            font-style: italic;
+            max-width: 800px;
+            margin: 0 auto 1rem;
+        }
+        .scripture-ref {
+            color: var(--primary-gold);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Giving Methods Grid */
+        .methods-section {
+            background-color: #f4f4f4;
+            padding: 5rem 10%;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .method-card {
+            background: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+            border-top: 5px solid var(--primary-gold);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .method-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .method-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-bg);
+        }
+
+        .method-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-bg);
+        }
+
+        .account-details {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            color: #555;
+            border: 1px dashed #ccc;
+        }
+
+        .account-label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #888;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .account-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            letter-spacing: 1px;
+        }
+
+        /* Call to Action */
+        .giving-cta {
+            background: var(--dark-bg);
+            color: white;
+            text-align: center;
+            padding: 4rem 5%;
+        }
+
+        /* Specific style for the Donate Button */
+        .donate-btn {
+            display: inline-block;
+            background: var(--primary-gold);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .donate-btn:hover {
+            background: #d4ac5d;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo-container">
+            <a href="index.html"><img src="logo.png" alt="TCF Logo" class="logo-img"></a>
+            <span class="church-name">TEHILLAH CHRISTIAN FELLOWSHIP</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="events.html">Events</a>
+            <a href="give.html" class="active">Give</a>
+            <a href="announcements.html">Announcements</a>
+            <a href="contact.html" class="btn-visit">Contact Us</a>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero hero-page">
+        <h1 class="animate-fade">Generosity</h1>
+        <p class="animate-fade delay-1">Partnering with God to build His Kingdom.</p>
+    </header>
+
+    <!-- SCRIPTURE INTRO -->
+    <section class="scripture-section animate-fade delay-2">
+        <p class="scripture-text">"Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver."</p>
+        <p class="scripture-ref">2 Corinthians 9:7</p>
+        <br><br>
+        <p style="max-width: 600px; margin: 0 auto; color: #666;">
+            Your generosity enables us to minister to our community, support our missionaries, and maintain our house of worship. Thank you for your faithfulness.
+        </p>
+    </section>
+
+    <!-- WAYS TO GIVE -->
+    <section class="methods-section">
+        <div class="text-center">
+            <h2 class="animate-fade">Ways To Give</h2>
+            <p class="animate-fade delay-1">Simple, secure, and convenient options.</p>
+        </div>
+
+        <div class="methods-grid animate-fade delay-2">
+            
+            <!-- METHOD 1: GCASH -->
+            <div class="method-card">
+                <div>
+                    <div class="method-icon">📱</div>
+                    <h3 class="method-title">GCash</h3>
+                    <p>Give instantly using your mobile phone.</p>
+                </div>
+                
+                <div class="account-details">
+                    <span class="account-label">Account Name</span>
+                    <strong>Tehillah Christian Fellowship</strong>
+                    <br><br>
+                    <span class="account-label">GCash Number</span>
+                    <span class="account-number">09630 649 593</span>
+                </div>
+            </div>
+
+            <!-- METHOD 2: BANK TRANSFER -->
+            <div class="method-card">
+                <div>
+                    <div class="method-icon">🏦</div>
+                    <h3 class="method-title">Bank Transfer</h3>
+                    <p>Direct deposit to our church account.</p>
+                </div>
+                
+                <div class="account-details">
+                    <span class="account-label">Bank Name</span>
+                    <strong>PNB (Philippine National Bank)</strong>
+                    <br><br>
+                    <span class="account-label">Account Number</span>
+                    <span class="account-number">3097 1022 4411</span>
+                    <br><br>
+                    <span class="account-label">Account Name</span>
+                    <div style="font-size: 0.9rem; line-height: 1.4;">
+                        Cabalcar, Carina F.<br>
+                        Trestiza, Shiela Mae M.<br>
+                        Bugna, Charlene F.
+                    </div>
+                </div>
+            </div>
+
+            <!-- METHOD 3: CREDIT / DEBIT CARD -->
+            <div class="method-card">
+                <div>
+                    <div class="method-icon">💳</div>
+                    <h3 class="method-title">Credit / Debit Card</h3>
+                    <p>Secure online giving via Visa or Mastercard.</p>
+                </div>
+                
+                <div class="account-details" style="border:none; background:transparent;">
+                    <span class="account-label" style="margin-bottom:10px;">Processed Securely</span>
+                    
+                    <!-- REPLACE href="#" WITH YOUR PAYPAL OR PAYMONGO LINK -->
+                    <a href="#" class="donate-btn">Give Online</a>
+                    
+                    <p style="margin-top:15px; font-size:0.8rem; color:#999;">
+                        We use a secure payment processor. You will be redirected to complete your donation.
+                    </p>
+                </div>
+            </div>
+
+            <!-- METHOD 4: IN PERSON -->
+            <div class="method-card">
+                <div>
+                    <div class="method-icon">📍</div>
+                    <h3 class="method-title">In Person</h3>
+                    <p>Drop your tithes and offerings in the box on Sundays.</p>
+                </div>
+                
+                <div class="account-details" style="border:none; background:transparent;">
+                    <span class="account-label">Location</span>
+                    <strong>Mc Arthur Street,<br>Lopez Subdivision</strong>
+                    <br><br>
+                    <span class="account-label">Service Times</span>
+                    <strong>Sundays @ 8:30 AM</strong>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- QUESTIONS CTA -->
+    <section class="giving-cta">
+        <h2>Have questions about giving?</h2>
+        <p style="margin: 1rem 0 2rem; color: #ccc;">Contact our finance team for assistance or official receipts.</p>
+        <a href="contact.html" class="hero-btn" style="border-color:white; color:white;">Contact Us</a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h3>Tehillah Christian Fellowship</h3>
+        <p>Mc Arthur Street, Lopez Subdivision, Brgy 6, Victorias City</p>
+        <p>&copy; 2026 TCF. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multimedia Team | Tehillah Christian Fellowship</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* --- NAVIGATION TABS (Imported from Announcements) --- */
+        .tabs-container {
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+            position: sticky;
+            top: 80px; 
+            z-index: 900;
+            overflow-x: auto; 
+            white-space: nowrap;
+            margin-bottom: 0; /* Connects visually to dashboard below */
+        }
+
+        .tabs-list {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 20px;
+            min-width: max-content;
+        }
+
+        /* Using 'a' tags that look like buttons for navigation */
+        .nav-tab-btn {
+            padding: 10px 20px;
+            border: 2px solid transparent;
+            background: transparent;
+            font-family: 'Lato', sans-serif;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #555;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 30px;
+            text-decoration: none; /* Remove underline for links */
+            display: inline-block;
+        }
+
+        .nav-tab-btn:hover { background: #f0f0f0; color: var(--primary-gold); }
+
+        .nav-tab-btn.active {
+            background: var(--primary-gold);
+            color: white;
+            border-color: var(--primary-gold);
+        }
+
+        /* --- DASHBOARD SPECIFIC STYLES --- */
+        
+        .dashboard-container {
+            padding: 3rem 5%;
+            background-color: #f4f4f4;
+            min-height: 60vh;
+        }
+
+        /* Dashboard Internal Tabs */
+        .dash-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dash-btn {
+            padding: 10px 25px;
+            border: none;
+            background: transparent;
+            font-family: 'Lato', sans-serif;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 25px;
+        }
+
+        .dash-btn:hover { background: #eee; color: var(--primary-gold); }
+        .dash-btn.active { background: var(--primary-gold); color: white; box-shadow: 0 4px 10px rgba(197, 160, 89, 0.4); }
+
+        /* Content Areas */
+        .dash-content { display: none; max-width: 1000px; margin: 0 auto; animation: fadeIn 0.5s ease; }
+        .dash-content.active { display: block; }
+
+        /* --- SCHEDULE CARDS --- */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--primary-gold);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .controls select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            color: #333;
+            outline: none;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .sched-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-top: 4px solid var(--dark-bg); /* Dark top border */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        
+        .sched-card:hover { transform: translateY(-5px); border-top-color: var(--primary-gold); }
+
+        .date-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        .role-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        /* --- ASSIGNMENTS & PERMANENT ROLES --- */
+        .perm-box {
+            background: var(--dark-bg);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Gold decorative line */
+        .perm-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 5px; height: 100%;
+            background: var(--primary-gold);
+        }
+
+        .perm-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 0;
+        }
+        .perm-item:last-child { border-bottom: none; }
+        .perm-role { font-weight: bold; color: var(--primary-gold); }
+        .perm-desc { font-size: 0.9rem; color: #ccc; text-align: right; }
+
+        /* Accordion for Monthly Edits */
+        .edit-item {
+            background: white;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+
+        .edit-header {
+            padding: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            background: white;
+            transition: background 0.3s;
+        }
+        .edit-header:hover { background: #f9f9f9; color: var(--primary-gold); }
+
+        .edit-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #fafafa;
+            padding: 0 1.2rem;
+            border-top: 1px solid #eee;
+        }
+
+        .edit-item.open .edit-details {
+            max-height: 200px;
+            padding: 1.2rem;
+        }
+
+        .in-charge { display: block; color: var(--primary-gold); font-weight: bold; margin-bottom: 0.5rem; }
+
+        /* --- ANNOUNCEMENTS TAB --- */
+        .news-item {
+            background: white;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-gold);
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .news-date { font-size: 0.8rem; color: #888; text-transform: uppercase; font-weight: bold; }
+
+        /* --- RESOURCES TAB --- */
+        .resource-link {
+            display: flex;
+            justify-content: space-between;
+            background: white;
+            padding: 1.2rem;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .resource-link:hover { transform: translateX(5px); color: var(--primary-gold); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo-container">
+            <a href="index.html"><img src="logo.png" alt="TCF Logo" class="logo-img"></a>
+            <span class="church-name">TEHILLAH CHRISTIAN FELLOWSHIP</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="events.html">Events</a>
+            <a href="announcements.html" class="active">Announcements</a>
+            <a href="contact.html" class="btn-visit">Contact Us</a>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero hero-page">
+        <h1 class="animate-fade">Announcements</h1>
+        <p class="animate-fade delay-1">Stay up to date with what's happening at TCF.</p>
+    </header>
+
+    <!-- ADDED: ANNOUNCEMENT NAVIGATION (LINKS BACK TO MAIN ANNOUNCEMENTS) -->
+    <div class="tabs-container">
+        <div class="tabs-list">
+            <!-- These are links back to the announcements.html page -->
+            <a href="announcements.html" class="nav-tab-btn">Church Wide</a>
+            <a href="announcements.html" class="nav-tab-btn">Todah Max Mom</a>
+            <a href="announcements.html" class="nav-tab-btn">Barakong Tatay</a>
+            <a href="announcements.html" class="nav-tab-btn">Shabach / Halal</a>
+            <a href="announcements.html" class="nav-tab-btn">Yadah Cutie</a>
+            <a href="announcements.html" class="nav-tab-btn">Praise Team</a>
+            <!-- Multimedia is active here -->
+            <a href="#" class="nav-tab-btn active">Multimedia</a>
+        </div>
+    </div>
+
+    <!-- DASHBOARD CONTAINER -->
+    <section class="dashboard-container">
+        
+        <!-- DASHBOARD TABS -->
+        <div class="dash-tabs">
+            <button class="dash-btn active" onclick="openDashTab('weekly')">Sunday Schedule</button>
+            <button class="dash-btn" onclick="openDashTab('assignments')">Assignments</button>
+            <button class="dash-btn" onclick="openDashTab('news')">Team News</button>
+            <button class="dash-btn" onclick="openDashTab('resources')">Resources</button>
+        </div>
+
+        <!-- 1. SUNDAY SCHEDULE TAB -->
+        <div id="weekly" class="dash-content active">
+            <div class="controls">
+                <h2 id="schedule-title" style="margin:0; font-size:1.5rem;">Schedule</h2>
+                <select id="month-selector" onchange="updateScheduleDisplay()"></select>
+            </div>
+            <div class="schedule-grid" id="weekly-container">
+                <!-- Javascript will put cards here -->
+            </div>
+        </div>
+
+        <!-- 2. ASSIGNMENTS TAB -->
+        <div id="assignments" class="dash-content">
+            
+            <!-- Permanent Roles Box -->
+            <div class="perm-box">
+                <h3 style="margin-bottom:1.5rem; color:white; border-bottom:1px solid #555; padding-bottom:10px;">Permanent Roles</h3>
+                <div class="perm-item">
+                    <span class="perm-role">DOCUMENTATION</span>
+                    <span class="perm-desc">The Team, Golda Flores, Jairah Dequina</span>
+                </div>
+                <div class="perm-item">
+                    <span class="perm-role">Wendel</span>
+                    <span class="perm-desc">Checking edits, uploading to cloud</span>
+                </div>
+                <div class="perm-item">
+                    <span class="perm-role">Keren</span>
+                    <span class="perm-desc">Collecting birthdays & new comers info</span>
+                </div>
+                <div class="perm-item">
+                    <span class="perm-role">Marven</span>
+                    <span class="perm-desc">Encoding Lyrics</span>
+                </div>
+            </div>
+
+            <h2 style="margin-bottom: 1rem; text-align: center;">Monthly Video Edit In-Charge</h2>
+            <div id="assignment-container">
+                <!-- Javascript will put accordion here -->
+            </div>
+        </div>
+
+        <!-- 3. TEAM NEWS TAB (New Request) -->
+        <div id="news" class="dash-content">
+            <h2 style="margin-bottom: 1.5rem; text-align: center;">Team Announcements</h2>
+            
+            <!-- Announcement 1 -->
+            <div class="news-item">
+                <div class="news-date">January 4, 2026</div>
+                <h3>New Software Update</h3>
+                <p>We are upgrading our livestream software next week. Please arrive 30 minutes early on Sunday for a quick briefing.</p>
+            </div>
+
+            <!-- Announcement 2 -->
+            <div class="news-item">
+                <div class="news-date">December 28, 2025</div>
+                <h3>Thank You!</h3>
+                <p>Great job on the Christmas special! The lighting and sound were perfect. Let's keep up the excellence for the New Year.</p>
+            </div>
+
+            <!-- Announcement 3 -->
+            <div class="news-item">
+                <div class="news-date">Important</div>
+                <h3>Equipment Care</h3>
+                <p>Please remember to cover the cameras after service and coil the cables properly. Thank you!</p>
+            </div>
+        </div>
+
+        <!-- 4. RESOURCES TAB -->
+        <div id="resources" class="dash-content">
+            <h2 style="margin-bottom: 1.5rem; text-align: center;">Team Tools</h2>
+            <div style="max-width: 600px; margin: 0 auto;">
+                <a href="#" class="resource-link">
+                    <span>📂 Motion Backgrounds Drive</span>
+                    <span>&rarr;</span>
+                </a>
+                <a href="#" class="resource-link">
+                    <span>🎵 Worship Lyrics Database</span>
+                    <span>&rarr;</span>
+                </a>
+                <a href="#" class="resource-link">
+                    <span>🎥 OBS Studio Tutorial</span>
+                    <span>&rarr;</span>
+                </a>
+                <a href="#" class="resource-link">
+                    <span>📅 Full Church Calendar</span>
+                    <span>&rarr;</span>
+                </a>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h3>Tehillah Christian Fellowship</h3>
+        <p>&copy; 2026 TCF Multimedia Team.</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC (Adapted from your file) -->
+    <script>
+        // --- DATA CONFIGURATION ---
+        const team = ["Keren", "Wendel", "Marven"];
+        const year = 2026;
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        
+        // --- LOGIC: SUNDAY SCHEDULE ---
+        const allSundays = [];
+        let date = new Date(year, 0, 1);
+        
+        // Find first Sunday
+        while (date.getDay() !== 0) { date.setDate(date.getDate() + 1); }
+
+        let weekCounter = 0;
+        while (date.getFullYear() === year) {
+            let monitorIndex = weekCounter % 3;
+            let liveIndex = (weekCounter + 1) % 3;
+
+            allSundays.push({
+                monthIndex: date.getMonth(),
+                day: date.getDate(),
+                monitor: team[monitorIndex],
+                live: team[liveIndex]
+            });
+
+            date.setDate(date.getDate() + 7);
+            weekCounter++;
+        }
+
+        // Populate Dropdown
+        const selector = document.getElementById('month-selector');
+        months.forEach((m, index) => {
+            let option = document.createElement("option");
+            option.value = index;
+            option.text = m;
+            selector.add(option);
+        });
+
+        // Set Default to Current Month
+        const currentMonthIndex = new Date().getFullYear() === 2026 ? new Date().getMonth() : 0;
+        selector.value = currentMonthIndex;
+
+        // Render Schedule
+        function updateScheduleDisplay() {
+            const selectedMonthIndex = parseInt(document.getElementById('month-selector').value);
+            const container = document.getElementById('weekly-container');
+            const title = document.getElementById('schedule-title');
+            
+            container.innerHTML = "";
+            title.innerText = `${months[selectedMonthIndex]} 2026 Schedule`;
+
+            const sundaysInMonth = allSundays.filter(s => s.monthIndex === selectedMonthIndex);
+
+            sundaysInMonth.forEach(s => {
+                const card = `
+                    <div class="sched-card">
+                        <div class="date-header">${months[s.monthIndex]} ${s.day}</div>
+                        <div class="role-row">
+                            <span style="color:#888">Monitor:</span>
+                            <span style="font-weight:bold; color: #333">${s.monitor}</span>
+                        </div>
+                        <div class="role-row">
+                            <span style="color:#888">Live Stream:</span>
+                            <span style="font-weight:bold; color: #333">${s.live}</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        // --- LOGIC: MONTHLY ASSIGNMENTS (ACCORDION) ---
+        function generateAssignmentTab() {
+            const container = document.getElementById('assignment-container');
+            
+            // Logic from your file: Jan=Keren(0), Feb=Marven(2)
+            const assignments = [0, 2]; 
+            const randomPicks = [1, 0, 2, 1, 0, 2, 1, 2, 0, 1]; 
+            const fullYearAssignments = assignments.concat(randomPicks);
+
+            months.forEach((month, index) => {
+                const person = team[fullYearAssignments[index]];
+                const itemId = `assign-${index}`;
+
+                const html = `
+                    <div class="edit-item" onclick="toggleEdit('${itemId}')" id="${itemId}">
+                        <div class="edit-header">
+                            <span>${month}</span>
+                            <span style="color:#aaa; font-size:0.8rem;">▾</span>
+                        </div>
+                        <div class="edit-details">
+                            <span class="in-charge">In charge of all edit: ${person}</span>
+                            <ul style="padding-left: 20px; color: #666; font-size: 0.9rem;">
+                                <li>Editing Video</li>
+                                <li>Editing new announcement designs</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function toggleEdit(id) {
+            const element = document.getElementById(id);
+            // Close others
+            document.querySelectorAll('.edit-item').forEach(item => {
+                if(item.id !== id) item.classList.remove('open');
+            });
+            // Toggle clicked
+            element.classList.toggle('open');
+        }
+
+        // --- TAB SWITCHING ---
+        function openDashTab(tabName) {
+            // Hide all content
+            document.querySelectorAll('.dash-content').forEach(c => c.classList.remove('active'));
+            // Remove active class from buttons
+            document.querySelectorAll('.dash-btn').forEach(b => b.classList.remove('active'));
+            
+            // Show content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Highlight button
+            const buttons = document.querySelectorAll('.dash-btn');
+            Array.from(buttons).find(b => b.getAttribute('onclick').includes(tabName)).classList.add('active');
+        }
+
+        // Initialize on Load
+        updateScheduleDisplay();
+        generateAssignmentTab();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Tehillah Christian Fellowship</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Specific Styles for About Page */
+        .about-split {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4rem;
+            padding: 5rem 10%;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            height: 400px;
+            background-image: url('https://images.unsplash.com/photo-1507692049790-de58293a469d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            box-shadow: 20px 20px 0px var(--primary-gold); /* Gold box shadow effect */
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .team-member {
+            text-align: center;
+        }
+
+        .member-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #ddd; /* Placeholder color */
+            margin: 0 auto 1rem;
+            object-fit: cover;
+            border: 3px solid var(--primary-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo-container">
+            <a href="index.html"><img src="logo.png" alt="TCF Logo" class="logo-img"></a>
+            <span class="church-name">TEHILLAH CHRISTIAN FELLOWSHIP</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html" class="active">About Us</a>
+            <a href="events.html">Events</a>
+            <a href="give.html">Give</a>
+            <a href="announcements.html">Announcements</a>
+            <a href="contact.html" class="btn-visit">Contact Us</a>
+        </div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <header class="hero hero-page">
+        <h1 class="animate-fade">Who We Are</h1>
+    </header>
+
+    <!-- MAIN INTRODUCTION (Split Layout) -->
+    <section class="about-split">
+        <div class="about-text animate-fade delay-1">
+            <h2 style="color: var(--primary-gold); margin-bottom: 1rem;">Welcome to TCF</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">
+                "Encouraging one another and praising God together."
+            </p>
+            <p>
+                We are a community dedicated to exalting Christ in everything we do. At Tehillah Christian Fellowship, we believe that church is more than a building—it is a family.
+            </p>
+            <br>
+            <p>
+                Whether you are joining us for the first time or have been part of the family for years, our heart is to see you grow in your relationship with God and find your purpose in His kingdom.
+            </p>
+        </div>
+        <!-- This image box has a cool Gold shadow effect defined in the CSS above -->
+        <div class="about-image animate-fade delay-2"></div> 
+    </section>
+
+    <!-- LEADERSHIP SECTION -->
+    <section class="container" style="background-color: #f4f4f4;">
+        <div class="text-center">
+            <h2 class="animate-fade">Our Leadership</h2>
+            <p class="animate-fade delay-1">Meet the team serving our community.</p>
+        </div>
+
+        <div class="team-grid animate-fade delay-2">
+            <!-- Head Pastor -->
+            <div class="team-member">
+                <img src="https://via.placeholder.com/150" alt="Head Pastor" class="member-photo">
+                <h3>Head Pastor</h3>
+                <p style="color: var(--primary-gold);">Name Here</p>
+            </div>
+            
+            <!-- Associate Pastor 1 -->
+            <div class="team-member">
+                <img src="https://via.placeholder.com/150" alt="Associate Pastor" class="member-photo">
+                <h3>Associate Pastor</h3>
+                <p style="color: var(--primary-gold);">Name Here</p>
+            </div>
+
+            <!-- Associate Pastor 2 -->
+            <div class="team-member">
+                <img src="https://via.placeholder.com/150" alt="Associate Pastor" class="member-photo">
+                <h3>Associate Pastor</h3>
+                <p style="color: var(--primary-gold);">Name Here</p>
+            </div>
+
+            <!-- Youth Pastor -->
+            <div class="team-member">
+                <img src="https://via.placeholder.com/150" alt="Youth Pastor" class="member-photo">
+                <h3>Youth Pastor</h3>
+                <p style="color: var(--primary-gold);">Name Here</p>
+            </div>
+
+            <!-- Music Director -->
+            <div class="team-member">
+                <img src="https://via.placeholder.com/150" alt="Music Director" class="member-photo">
+                <h3>Music Director</h3>
+                <p style="color: var(--primary-gold);">Name Here</p>
+            </div>
+
+            <!-- Multimedia Director -->
+            <div class="team-member">
+                <img src="https://via.placeholder.com/150" alt="Multimedia Director" class="member-photo">
+                <h3>Multimedia Director</h3>
+                <p style="color: var(--primary-gold);">Name Here</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FOOTER -->
+    <section class="container text-center" style="background: var(--dark-bg); color: white;">
+        <h2>Ready to visit?</h2>
+        <p style="margin: 1rem 0 2rem;">We would love to welcome you this Sunday.</p>
+        <a href="contact.html" class="btn-visit">Plan A Visit</a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h3>Tehillah Christian Fellowship</h3>
+        <p>Mc Arthur Street, Lopez Subdivision, Brgy 6, Victorias City</p>
+        <p>&copy; 2026 TCF. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

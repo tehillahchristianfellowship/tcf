@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TCF Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: #f4f4f4; padding-bottom: 5rem; }
+        .admin-nav { background: var(--dark-bg); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; }
+        .logout-btn { background: transparent; border: 1px solid white; color: white; padding: 5px 15px; cursor: pointer; }
+        
+        .admin-container { max-width: 1000px; margin: 2rem auto; padding: 0 20px; }
+        .panel { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        
+        /* Form Styles */
+        .form-grid { display: grid; gap: 1rem; }
+        select, input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        .add-btn { background: var(--primary-gold); color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; width: fit-content; }
+        
+        /* List Styles */
+        .item-list { margin-top: 1rem; border-top: 1px solid #eee; max-height: 400px; overflow-y: auto; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #eee; }
+        .delete-btn { background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .delete-btn:hover { background: #cc0000; }
+        
+        .item-details { display: flex; flex-direction: column; }
+        .item-meta { font-size: 0.85rem; color: #888; }
+    </style>
+</head>
+<body>
+
+    <nav class="admin-nav">
+        <h3>TCF Admin Panel</h3>
+        <button id="logoutBtn" class="logout-btn">Log Out</button>
+    </nav>
+
+    <div class="admin-container">
+        
+        <!-- ANNOUNCEMENTS MANAGER -->
+        <div class="panel">
+            <h2 style="color: var(--primary-gold); margin-bottom: 1rem;">Post Announcement</h2>
+            <form id="announcementForm" class="form-grid">
+                <input type="text" id="annTitle" placeholder="Title (e.g., Youth Camp)" required>
+                <input type="text" id="annDate" placeholder="Date Label (e.g., January 24, 2026)" required>
+                <select id="annMinistry">
+                    <option value="Church Wide">Church Wide</option>
+                    <option value="Todah Max Mom">Todah Max Mom</option>
+                    <option value="Barakong Tatay">Barakong Tatay</option>
+                    <option value="Shabach / Halal">Shabach / Halal (Youth)</option>
+                    <option value="Yadah Cutie">Yadah Cutie (Kids)</option>
+                    <option value="Praise Team">Praise Team</option>
+                    <option value="Multimedia">Multimedia</option>
+                </select>
+                <textarea id="annContent" rows="3" placeholder="Description..." required></textarea>
+                <button type="submit" class="add-btn">Post Announcement</button>
+            </form>
+
+            <h3 style="margin-top: 2rem;">Manage Announcements</h3>
+            <div id="announcementList" class="item-list">
+                <!-- Javascript will load items here -->
+                <p style="padding: 1rem; color: #888;">Loading...</p>
+            </div>
+        </div>
+
+        <!-- EVENTS MANAGER -->
+        <div class="panel">
+            <h2 style="color: var(--primary-gold); margin-bottom: 1rem;">Add Event</h2>
+            <form id="eventForm" class="form-grid">
+                <input type="text" id="evtTitle" placeholder="Event Name (e.g., Worship Night)" required>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="evtMonth" placeholder="Month (e.g., JAN)" style="width: 80px;" required>
+                    <input type="text" id="evtDay" placeholder="Day (e.g., 09)" style="width: 80px;" required>
+                </div>
+                <input type="text" id="evtTime" placeholder="Time (e.g., Friday @ 7:00 PM)" required>
+                <textarea id="evtDesc" rows="3" placeholder="Description..." required></textarea>
+                <button type="submit" class="add-btn">Add Event</button>
+            </form>
+
+            <h3 style="margin-top: 2rem;">Event List (Manage All)</h3>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Past events will appear here. Delete them to remove from website.</p>
+            <div id="eventList" class="item-list">
+                <p style="padding: 1rem; color: #888;">Loading...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { auth, db, signOut, onAuthStateChanged, collection, addDoc, query, orderBy, onSnapshot, deleteDoc, doc } from './firebase-config.js';
+
+        // 1. Protect this page (Kick out if not logged in)
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.href = "login.html"; }
+        });
+
+        // 2. Logout Logic
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.href = "login.html");
+        });
+
+        // 3. ADD ANNOUNCEMENT
+        document.getElementById('announcementForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Posting...";
+            
+            try {
+                await addDoc(collection(db, "announcements"), {
+                    title: document.getElementById('annTitle').value,
+                    dateStr: document.getElementById('annDate').value,
+                    ministry: document.getElementById('annMinistry').value,
+                    content: document.getElementById('annContent').value,
+                    createdAt: new Date()
+                });
+                e.target.reset();
+                alert("Announcement Posted!");
+            } catch (err) { alert("Error: " + err.message); }
+            btn.innerText = "Post Announcement";
+        });
+
+        // 4. ADD EVENT
+        document.getElementById('eventForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Adding...";
+            
+            try {
+                await addDoc(collection(db, "events"), {
+                    title: document.getElementById('evtTitle').value,
+                    month: document.getElementById('evtMonth').value,
+                    day: document.getElementById('evtDay').value,
+                    time: document.getElementById('evtTime').value,
+                    desc: document.getElementById('evtDesc').value,
+                    createdAt: new Date()
+                });
+                e.target.reset();
+                alert("Event Added!");
+            } catch (err) { alert("Error: " + err.message); }
+            btn.innerText = "Add Event";
+        });
+
+        // 5. LOAD & DELETE ANNOUNCEMENTS (Real-time)
+        const qAnn = query(collection(db, "announcements"), orderBy("createdAt", "desc"));
+        onSnapshot(qAnn, (snapshot) => {
+            const list = document.getElementById('announcementList');
+            list.innerHTML = "";
+            if (snapshot.empty) { list.innerHTML = "<p style='padding:1rem'>No announcements yet.</p>"; }
+            
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                const div = document.createElement('div');
+                div.className = "list-item";
+                div.innerHTML = `
+                    <div class="item-details">
+                        <strong>${data.title}</strong>
+                        <span class="item-meta">${data.ministry} | ${data.dateStr}</span>
+                    </div>
+                    <button class="delete-btn" data-id="${docSnap.id}">Delete</button>
+                `;
+                list.appendChild(div);
+            });
+            
+            // Attach delete events
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    if(confirm("Permanently delete this announcement?")) {
+                        await deleteDoc(doc(db, "announcements", e.target.dataset.id));
+                    }
+                });
+            });
+        });
+        
+        // 6. LOAD EVENTS (Real-time)
+        const qEvt = query(collection(db, "events"), orderBy("createdAt", "desc"));
+        onSnapshot(qEvt, (snapshot) => {
+            const list = document.getElementById('eventList');
+            list.innerHTML = "";
+            if (snapshot.empty) { list.innerHTML = "<p style='padding:1rem'>No events found.</p>"; }
+
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                const div = document.createElement('div');
+                div.className = "list-item";
+                div.innerHTML = `
+                    <div class="item-details">
+                        <strong>${data.title}</strong>
+                        <span class="item-meta">${data.month} ${data.day} | ${data.time}</span>
+                    </div>
+                    <button class="delete-evt-btn delete-btn" data-id="${docSnap.id}">Delete</button>
+                `;
+                list.appendChild(div);
+            });
+            
+            // Attach delete events specific to this list
+            document.querySelectorAll('.delete-evt-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    if(confirm("Permanently delete this event?")) {
+                        await deleteDoc(doc(db, "events", e.target.dataset.id));
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Tehillah Christian Fellowship</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* --- CONTACT PAGE SPECIFIC STYLES --- */
+        
+        .contact-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 4rem;
+            padding: 5rem 10%;
+        }
+
+        /* Left Side: Info */
+        .contact-info h2 { color: var(--primary-gold); margin-bottom: 1.5rem; }
+        .info-item { margin-bottom: 2rem; display: flex; gap: 15px; }
+        .info-icon { 
+            font-size: 1.5rem; 
+            color: var(--primary-gold); 
+            width: 30px;
+        }
+        .info-text h4 { font-weight: bold; margin-bottom: 5px; }
+
+        /* Map Styling */
+        .map-container {
+            width: 100%;
+            height: 250px;
+            background: #eee;
+            margin-top: 2rem;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 2px solid var(--primary-gold);
+        }
+
+        /* Right Side: Form */
+        .contact-form-box {
+            background: white;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--primary-gold);
+        }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Lato', sans-serif;
+            font-size: 1rem;
+            background: #fdfdfd;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            background: #fff;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background: var(--dark-bg);
+            color: white;
+            border: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background: var(--primary-gold);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: #f4f4f4;
+            padding: 4rem 10%;
+        }
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .faq-item h4 { color: var(--dark-bg); margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo-container">
+            <a href="index.html"><img src="logo.png" alt="TCF Logo" class="logo-img"></a>
+            <span class="church-name">TEHILLAH CHRISTIAN FELLOWSHIP</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="events.html">Events</a>
+            <a href="give.html">Give</a>
+            <a href="announcements.html">Announcements</a>
+            <a href="contact.html" class="active btn-visit">Contact Us</a>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="hero hero-page">
+        <h1 class="animate-fade">Plan Your Visit</h1>
+    </header>
+
+    <!-- MAIN CONTACT SECTION -->
+    <section class="contact-layout">
+        
+        <!-- LEFT: Contact Info -->
+        <div class="contact-info animate-fade delay-1">
+            <h2>Get In Touch</h2>
+            <p style="margin-bottom: 2rem;">We would love to hear from you! Whether you have a question, a prayer request, or want to plan a visit, reach out to us.</p>
+
+            <div class="info-item">
+                <div class="info-icon">📍</div>
+                <div class="info-text">
+                    <h4>Address</h4>
+                    <p>Mc Arthur Street, Lopez Subdivision,<br>Brgy 6, Victorias City, Negros Occidental 6119</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">📞</div>
+                <div class="info-text">
+                    <h4>Phone</h4>
+                    <p>0963 064 9593</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">✉️</div>
+                <div class="info-text">
+                    <h4>Email</h4>
+                    <p>tehillahchristianfellowship@gmail.com</p>
+                </div>
+            </div>
+
+            <!-- GOOGLE MAP EMBED (Pointing to Victorias City) -->
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3925.753366835153!2d123.0722!3d10.8994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a9257608055555%3A0x123456789abcdef!2sVictorias%20City!5e0!3m2!1sen!2sph!4v1625000000000!5m2!1sen!2sph" 
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
+        </div>
+
+        <!-- RIGHT: Plan A Visit Form -->
+        <div class="contact-form-box animate-fade delay-2">
+            <h2>Plan Your Visit</h2>
+            <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #666;">Fill out this form and we will have someone ready to greet you!</p>
+            
+            <!-- IMPORTANT: Replace the 'action' URL below with your own from Formspree.io -->
+            <form action="https://formspree.io/f/mqeadvrk" method="POST">
+                
+                <div class="form-group">
+                    <label>Your Name *</label>
+                    <input type="text" name="name" placeholder="John Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" name="email" placeholder="john@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" placeholder="09XX XXX XXXX">
+                </div>
+
+                <div class="form-group">
+                    <label>When are you visiting?</label>
+                    <input type="date" name="visit-date">
+                </div>
+
+                <div class="form-group">
+                    <label>How many people?</label>
+                    <select name="guests">
+                        <option value="Just me">Just me</option>
+                        <option value="2 people">2 people</option>
+                        <option value="Family (3-5)">Family (3-5)</option>
+                        <option value="Group (6+)">Group (6+)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Any Message or Questions?</label>
+                    <textarea name="message" rows="4" placeholder="I have kids, where do I go?"></textarea>
+                </div>
+
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="faq-section">
+        <h2 class="text-center">Common Questions</h2>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4>What should I wear?</h4>
+                <p>We are a casual environment. Feel free to wear whatever makes you comfortable!</p>
+            </div>
+            <div class="faq-item">
+                <h4>Is there something for kids?</h4>
+                <p>Yes! We have Sunday School at 8:45 AM specifically designed for children to learn about Jesus.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Where do I park?</h4>
+                <p>We have street parking available along Mc Arthur Street near the church entrance.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h3>Tehillah Christian Fellowship</h3>
+        <p>Mc Arthur Street, Lopez Subdivision, Brgy 6, Victorias City</p>
+        <p>&copy; 2026 TCF. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
