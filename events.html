@@ -3,156 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events | Tehillah Christian Fellowship</title>
+    <title>Events | TCF</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-
     <style>
-        /* --- EVENTS PAGE SPECIFIC STYLES --- */
-
-        /* Featured Event (Large Card) */
-        .featured-section {
-            padding: 4rem 10%;
-            background: #fff;
-        }
-
-        .featured-card {
-            display: flex;
-            flex-wrap: wrap;
-            background: var(--dark-bg);
-            color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .featured-image {
-            flex: 1;
-            min-width: 300px;
-            background: url('https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
-            min-height: 300px;
-        }
-
-        .featured-content {
-            flex: 1;
-            padding: 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .featured-badge {
-            background: var(--primary-gold);
-            color: white;
-            padding: 5px 15px;
-            text-transform: uppercase;
-            font-weight: bold;
-            font-size: 0.8rem;
-            align-self: flex-start;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-        }
-
-        .featured-content h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: white;
-        }
-
-        /* Events Grid List */
-        .events-list-section {
-            background-color: #f4f4f4;
-            padding: 5rem 10%;
-        }
-
-        .events-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .event-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .event-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .event-header {
-            background: var(--dark-bg);
-            color: white;
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-bottom: 4px solid var(--primary-gold);
-        }
-
-        .date-box {
-            background: #333;
-            border: 1px solid #555;
-            padding: 10px;
-            text-align: center;
-            border-radius: 4px;
-            min-width: 60px;
-        }
-
-        .date-month {
-            display: block;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: var(--primary-gold);
-        }
-
-        .date-day {
-            display: block;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
-        }
-
-        .event-body {
-            padding: 2rem;
-            flex-grow: 1;
-        }
-
-        .event-time {
-            color: #888;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .event-desc {
-            color: #666;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        .event-link {
-            text-decoration: none;
-            color: var(--primary-gold);
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            transition: 0.3s;
-        }
-        .event-link:hover { color: #b08d45; padding-left: 5px; }
-
+        /* Re-adding needed event styles */
+        .event-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.3s; display: flex; flex-direction: column; }
+        .event-card:hover { transform: translateY(-5px); }
+        .event-header { background: var(--dark-bg); color: white; padding: 1.5rem; display: flex; align-items: center; gap: 15px; border-bottom: 4px solid var(--primary-gold); }
+        .date-box { background: #333; border: 1px solid #555; padding: 10px; text-align: center; border-radius: 4px; min-width: 60px; }
+        .date-month { display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--primary-gold); }
+        .date-day { display: block; font-size: 1.5rem; font-weight: bold; color: white; }
+        .event-body { padding: 2rem; flex-grow: 1; }
     </style>
 </head>
 <body>
 
-    <!-- NAVIGATION -->
     <nav>
         <div class="logo-container">
             <a href="index.html"><img src="logo.png" alt="TCF Logo" class="logo-img"></a>
@@ -161,6 +27,7 @@
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="about.html">About Us</a>
+            <a href="ministries.html">Ministries</a>
             <a href="events.html" class="active">Events</a>
             <a href="give.html">Give</a>
             <a href="announcements.html">Announcements</a>
@@ -168,124 +35,83 @@
         </div>
     </nav>
 
-    <!-- HERO HEADER -->
     <header class="hero hero-page">
         <h1 class="animate-fade">Upcoming Events</h1>
         <p class="animate-fade delay-1">Gather, Grow, and Go with us.</p>
     </header>
 
-    <!-- FEATURED EVENT -->
-    <section class="featured-section">
-        <div class="text-center" style="margin-bottom: 3rem;">
-            <h2 class="animate-fade">Don't Miss This</h2>
-        </div>
-
-        <div class="featured-card animate-fade delay-1">
-            <div class="featured-image"></div>
-            <div class="featured-content">
-                <span class="featured-badge">Major Event</span>
-                <h2>Youth Camp 2026</h2>
-                <p style="margin-bottom: 1.5rem; font-size: 1.1rem; color: #ddd;">
-                    Get ready for the most impactful summer of your life! Join the Shabach / Halal youth for 3 days of worship, word, and fun. Early bird registration is now open.
-                </p>
-                <p style="margin-bottom: 2rem; font-weight: bold; color: var(--primary-gold);">
-                    📅 April 15-18, 2026 &nbsp;|&nbsp; 📍 Camp Site Location
-                </p>
-                <a href="contact.html" class="btn-visit" style="display:inline-block; text-align:center;">Register Now</a>
-            </div>
+    <section class="container">
+        <!-- Loading Message -->
+        <div id="loading" class="text-center" style="padding: 2rem; color: #666;">Loading events...</div>
+        
+        <!-- Events Grid -->
+        <div class="card-grid" id="eventsContainer">
+            <!-- Dynamic events go here -->
         </div>
     </section>
 
-    <!-- EVENTS GRID -->
-    <section class="events-list-section">
-        <div class="text-center">
-            <h2>This Month</h2>
-            <p>Join us for our regular gatherings.</p>
-        </div>
-
-        <div class="events-grid animate-fade delay-2">
-            
-            <!-- Event 1 -->
-            <div class="event-card">
-                <div class="event-header">
-                    <div class="date-box">
-                        <span class="date-month">Jan</span>
-                        <span class="date-day">09</span>
-                    </div>
-                    <h3>Worship Night</h3>
-                </div>
-                <div class="event-body">
-                    <span class="event-time">⏰ Friday @ 7:00 PM</span>
-                    <p class="event-desc">
-                        A special evening dedicated to soaking in God's presence through extended praise and worship. Bring a friend!
-                    </p>
-                    <a href="contact.html" class="event-link">Get Directions &rarr;</a>
-                </div>
-            </div>
-
-            <!-- Event 2 -->
-            <div class="event-card">
-                <div class="event-header">
-                    <div class="date-box">
-                        <span class="date-month">Jan</span>
-                        <span class="date-day">10</span>
-                    </div>
-                    <h3>Todah Max Breakfast</h3>
-                </div>
-                <div class="event-body">
-                    <span class="event-time">⏰ Saturday @ 8:00 AM</span>
-                    <p class="event-desc">
-                        Our monthly Women's Ministry fellowship. Come for the food, stay for the encouraging word and community.
-                    </p>
-                    <a href="contact.html" class="event-link">RSVP Here &rarr;</a>
-                </div>
-            </div>
-
-            <!-- Event 3 -->
-            <div class="event-card">
-                <div class="event-header">
-                    <div class="date-box">
-                        <span class="date-month">Jan</span>
-                        <span class="date-day">14</span>
-                    </div>
-                    <h3>Men's Prayer</h3>
-                </div>
-                <div class="event-body">
-                    <span class="event-time">⏰ Wednesday @ 6:00 AM</span>
-                    <p class="event-desc">
-                        Barakong Tatay Ministry invites all men to start the day seeking the Lord in prayer and devotion.
-                    </p>
-                    <a href="contact.html" class="event-link">Learn More &rarr;</a>
-                </div>
-            </div>
-
-            <!-- Event 4 -->
-            <div class="event-card">
-                <div class="event-header">
-                    <div class="date-box">
-                        <span class="date-month">Feb</span>
-                        <span class="date-day">01</span>
-                    </div>
-                    <h3>Water Baptism</h3>
-                </div>
-                <div class="event-body">
-                    <span class="event-time">⏰ Sunday @ 1:00 PM</span>
-                    <p class="event-desc">
-                        Ready to go public with your faith? We will be holding baptisms after the Sunday service. Sign up today.
-                    </p>
-                    <a href="contact.html" class="event-link">Sign Up &rarr;</a>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- FOOTER -->
     <footer>
         <h3>Tehillah Christian Fellowship</h3>
         <p>Mc Arthur Street, Lopez Subdivision, Brgy 6, Victorias City</p>
         <p>&copy; 2026 TCF. All Rights Reserved.</p>
     </footer>
 
+    <!-- DYNAMIC LOGIC -->
+    <script type="module">
+        import { db, collection, getDocs, query } from './firebase-config.js';
+
+        const container = document.getElementById('eventsContainer');
+        const loading = document.getElementById('loading');
+
+        async function loadEvents() {
+            try {
+                // Fetch events (without sorting on server to prevent errors)
+                const q = query(collection(db, "events"));
+                const snapshot = await getDocs(q);
+                
+                loading.style.display = 'none';
+                
+                if(snapshot.empty) {
+                    container.innerHTML = `<p class="text-center" style="grid-column: 1/-1;">No upcoming events yet.</p>`;
+                    return;
+                }
+
+                // Sort events in browser (Newest created first)
+                let items = [];
+                snapshot.forEach(doc => items.push(doc.data()));
+                items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                // Display events
+                items.forEach(data => {
+                    const card = `
+                        <div class="event-card animate-fade">
+                            <div class="event-header">
+                                <div class="date-box">
+                                    <span class="date-month">${data.month}</span>
+                                    <span class="date-day">${data.day}</span>
+                                </div>
+                                <h3>${data.title}</h3>
+                            </div>
+                            <div class="event-body">
+                                <span style="color:#888; font-weight:bold; font-size:0.9rem; display:block; margin-bottom:0.5rem;">
+                                    ⏰ ${data.time}
+                                </span>
+                                <p style="color:#666; margin-bottom:1.5rem;">${data.desc}</p>
+                                <a href="contact.html" style="color:var(--primary-gold); font-weight:bold; text-transform:uppercase; font-size:0.85rem;">
+                                    Register / Info &rarr;
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            } catch (error) {
+                console.error(error);
+                loading.innerHTML = `<span style="color:red">Error loading events: ${error.message}</span>`;
+            }
+        }
+
+        loadEvents();
+    </script>
 </body>
 </html>
