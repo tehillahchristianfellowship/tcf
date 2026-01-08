@@ -3,219 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | TCF Admin</title>
+    <title>Announcements | TCF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        body { background: #f4f4f4; padding-bottom: 5rem; }
-        .admin-nav { background: var(--dark-bg); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; }
-        .logout-btn { background: transparent; border: 1px solid white; color: white; padding: 5px 15px; cursor: pointer; }
-        
-        .admin-container { max-width: 1000px; margin: 2rem auto; padding: 0 20px; }
-        .panel { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 2rem; }
-        
-        /* Form Styles */
-        .form-grid { display: grid; gap: 1rem; }
-        select, input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-        .add-btn { background: var(--primary-gold); color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; width: fit-content; }
-        
-        /* List Styles */
-        .item-list { margin-top: 1rem; border-top: 1px solid #eee; max-height: 400px; overflow-y: auto; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #eee; }
-        .delete-btn { background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-        .delete-btn:hover { background: #cc0000; }
-        
-        .item-details { display: flex; flex-direction: column; }
-        .item-meta { font-size: 0.85rem; color: #888; }
-    </style>
 </head>
 <body>
 
-    <nav class="admin-nav">
-        <h3>TCF Admin Panel</h3>
-        <button id="logoutBtn" class="logout-btn">Log Out</button>
+    <!-- NAV (Standard) -->
+    <nav>
+        <div class="logo-container">
+            <a href="index.html"><img src="logo.png" alt="TCF Logo" class="logo-img"></a>
+            <span class="church-name">TEHILLAH CHRISTIAN FELLOWSHIP</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="ministries.html">Ministries</a>
+            <a href="events.html">Events</a>
+            <a href="give.html">Give</a>
+            <a href="announcements.html" class="active">Announcements</a>
+            <a href="contact.html" class="btn-visit">Contact Us</a>
+        </div>
     </nav>
 
-    <div class="admin-container">
-        
-        <!-- ANNOUNCEMENTS MANAGER -->
-        <div class="panel">
-            <h2 style="color: var(--primary-gold); margin-bottom: 1rem;">Post Announcement</h2>
-            <form id="announcementForm" class="form-grid">
-                <input type="text" id="annTitle" placeholder="Title (e.g., Youth Camp)" required>
-                <input type="text" id="annDate" placeholder="Date Label (e.g., January 24, 2026)" required>
-                <select id="annMinistry">
-                    <option value="Church Wide">Church Wide</option>
-                    <option value="Todah Max Mom">Todah Max Mom</option>
-                    <option value="Barakong Tatay">Barakong Tatay</option>
-                    <option value="Shabach / Halal">Shabach / Halal (Youth)</option>
-                    <option value="Yadah Cutie">Yadah Cutie (Kids)</option>
-                    <option value="Praise Team">Praise Team</option>
-                    <option value="Multimedia">Multimedia</option>
-                </select>
-                <textarea id="annContent" rows="3" placeholder="Description..." required></textarea>
-                <button type="submit" class="add-btn">Post Announcement</button>
-            </form>
+    <header class="hero hero-page">
+        <h1 class="animate-fade">Announcements</h1>
+        <p class="animate-fade delay-1">Stay up to date with what's happening at TCF.</p>
+    </header>
 
-            <h3 style="margin-top: 2rem;">Manage Announcements</h3>
-            <div id="announcementList" class="item-list">
-                <p style="padding: 1rem; color: #888;">Loading...</p>
-            </div>
+    <!-- TAB FILTERS -->
+    <div class="tabs-container">
+        <div class="tabs-list" id="tabButtons">
+            <button class="tab-btn active" data-filter="All">All News</button>
+            <button class="tab-btn" data-filter="Church Wide">Church Wide</button>
+            <button class="tab-btn" data-filter="Todah Max Mom">Todah Max Mom</button>
+            <button class="tab-btn" data-filter="Barakong Tatay">Barakong Tatay</button>
+            <button class="tab-btn" data-filter="Shabach / Halal">Shabach / Halal</button>
+            <button class="tab-btn" data-filter="Yadah Cutie">Yadah Cutie</button>
+            <button class="tab-btn" data-filter="Praise Team">Praise Team</button>
+            <a href="multimedia.html" class="nav-tab-btn">Multimedia</a>
         </div>
-
-        <!-- EVENTS MANAGER -->
-        <div class="panel">
-            <h2 style="color: var(--primary-gold); margin-bottom: 1rem;">Add Event</h2>
-            <form id="eventForm" class="form-grid">
-                <input type="text" id="evtTitle" placeholder="Event Name (e.g., Worship Night)" required>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="evtMonth" placeholder="Month (e.g., JAN)" style="width: 80px;" required>
-                    <input type="text" id="evtDay" placeholder="Day (e.g., 09)" style="width: 80px;" required>
-                </div>
-                <input type="text" id="evtTime" placeholder="Time (e.g., Friday @ 7:00 PM)" required>
-                <textarea id="evtDesc" rows="3" placeholder="Description..." required></textarea>
-                <button type="submit" class="add-btn">Add Event</button>
-            </form>
-
-            <h3 style="margin-top: 2rem;">Event List (Manage All)</h3>
-            <div id="eventList" class="item-list">
-                <p style="padding: 1rem; color: #888;">Loading...</p>
-            </div>
-        </div>
-
     </div>
 
+    <!-- CONTENT AREA -->
+    <section class="container">
+        <div id="loading" class="text-center" style="padding: 2rem; color: #666;">Loading announcements...</div>
+        <div id="announcementsContainer"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h3>Tehillah Christian Fellowship</h3>
+        <p>Mc Arthur Street, Lopez Subdivision, Brgy 6, Victorias City</p>
+        <p>&copy; 2026 TCF. All Rights Reserved.</p>
+    </footer>
+
+    <!-- DYNAMIC LOGIC -->
     <script type="module">
-        import { auth, db, signOut, onAuthStateChanged, collection, addDoc, query, onSnapshot, deleteDoc, doc } from './firebase-config.js';
+        import { db, collection, getDocs, query } from './firebase-config.js';
 
-        // 1. Auth Check
-        onAuthStateChanged(auth, (user) => {
-            if (!user) { window.location.href = "login.html"; }
-        });
+        const container = document.getElementById('announcementsContainer');
+        const loading = document.getElementById('loading');
+        let allData = []; // Store data here so we don't re-fetch on every click
 
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => window.location.href = "login.html");
-        });
-
-        // 2. ADD ANNOUNCEMENT
-        document.getElementById('announcementForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.innerText = "Posting...";
-            
+        // 1. Fetch Data on Load
+        async function loadData() {
             try {
-                await addDoc(collection(db, "announcements"), {
-                    title: document.getElementById('annTitle').value,
-                    dateStr: document.getElementById('annDate').value,
-                    ministry: document.getElementById('annMinistry').value,
-                    content: document.getElementById('annContent').value,
-                    createdAt: Date.now() // Using simple timestamp
-                });
-                e.target.reset();
-                alert("Announcement Posted!");
-            } catch (err) { alert("Error: " + err.message); }
-            btn.innerText = "Post Announcement";
-        });
+                // Fetch announcements (no server sorting to prevent errors)
+                const q = query(collection(db, "announcements"));
+                const snapshot = await getDocs(q);
+                
+                allData = [];
+                snapshot.forEach(doc => allData.push(doc.data()));
+                
+                // Sort in browser (Newest first)
+                allData.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                
+                loading.style.display = 'none';
+                renderData("All"); // Show all by default
+            } catch (error) {
+                console.error(error);
+                loading.innerHTML = `<span style="color:red">Error loading data: ${error.message}</span>`;
+            }
+        }
 
-        // 3. ADD EVENT
-        document.getElementById('eventForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.innerText = "Adding...";
+        // 2. Render Cards based on Filter
+        function renderData(filter) {
+            container.innerHTML = "";
             
-            try {
-                await addDoc(collection(db, "events"), {
-                    title: document.getElementById('evtTitle').value,
-                    month: document.getElementById('evtMonth').value,
-                    day: document.getElementById('evtDay').value,
-                    time: document.getElementById('evtTime').value,
-                    desc: document.getElementById('evtDesc').value,
-                    createdAt: Date.now()
-                });
-                e.target.reset();
-                alert("Event Added!");
-            } catch (err) { alert("Error: " + err.message); }
-            btn.innerText = "Add Event";
-        });
+            const filtered = filter === "All" 
+                ? allData 
+                : allData.filter(item => item.ministry === filter);
 
-        // 4. LOAD LISTS (FIXED: Removing 'orderBy' to prevent index errors)
-        
-        // Announcements
-        const qAnn = query(collection(db, "announcements"));
-        onSnapshot(qAnn, (snapshot) => {
-            const list = document.getElementById('announcementList');
-            list.innerHTML = "";
-            
-            if (snapshot.empty) { 
-                list.innerHTML = "<p style='padding:1rem'>No announcements found.</p>"; 
+            if(filtered.length === 0) {
+                container.innerHTML = `<p class="text-center" style="padding: 2rem;">No announcements found for ${filter}.</p>`;
                 return;
             }
 
-            // Convert to array and Sort in Browser (Newest First)
-            let items = [];
-            snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-            items.sort((a, b) => b.createdAt - a.createdAt);
-
-            items.forEach(data => {
-                const div = document.createElement('div');
-                div.className = "list-item";
-                div.innerHTML = `
-                    <div class="item-details">
-                        <strong>${data.title}</strong>
-                        <span class="item-meta">${data.ministry} | ${data.dateStr}</span>
+            filtered.forEach(item => {
+                const card = `
+                    <div class="announcement-card animate-fade">
+                        <span class="announcement-date">
+                            ${item.dateStr} • <span style="color:var(--primary-gold)">${item.ministry}</span>
+                        </span>
+                        <h3>${item.title}</h3>
+                        <p>${item.content}</p>
                     </div>
-                    <button class="delete-btn" data-id="${data.id}">Delete</button>
                 `;
-                list.appendChild(div);
+                container.innerHTML += card;
             });
-            
-            // Re-attach delete listeners
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    if(confirm("Delete this?")) {
-                        await deleteDoc(doc(db, "announcements", e.target.dataset.id));
-                    }
-                });
-            });
-        });
-        
-        // Events
-        const qEvt = query(collection(db, "events"));
-        onSnapshot(qEvt, (snapshot) => {
-            const list = document.getElementById('eventList');
-            list.innerHTML = "";
-            
-            if (snapshot.empty) { 
-                list.innerHTML = "<p style='padding:1rem'>No events found.</p>"; 
-                return;
-            }
+        }
 
-            // Convert to array and Sort in Browser
-            let items = [];
-            snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-            items.sort((a, b) => b.createdAt - a.createdAt);
-
-            items.forEach(data => {
-                const div = document.createElement('div');
-                div.className = "list-item";
-                div.innerHTML = `
-                    <div class="item-details">
-                        <strong>${data.title}</strong>
-                        <span class="item-meta">${data.month} ${data.day} | ${data.time}</span>
-                    </div>
-                    <button class="delete-evt-btn delete-btn" data-id="${data.id}">Delete</button>
-                `;
-                list.appendChild(div);
-            });
-            
-            document.querySelectorAll('.delete-evt-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    if(confirm("Delete this event?")) {
-                        await deleteDoc(doc(db, "events", e.target.dataset.id));
-                    }
-                });
+        // 3. Tab Click Logic
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Remove active class from all
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                // Add to clicked
+                e.target.classList.add('active');
+                // Render
+                renderData(e.target.dataset.filter);
             });
         });
 
+        loadData();
     </script>
 </body>
 </html>
