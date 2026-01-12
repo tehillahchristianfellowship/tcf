@@ -16,6 +16,9 @@
             font-family: 'Lato', sans-serif; color: #555; z-index: 9999;
         }
 
+        /* Main Content - Hidden by default */
+        #adminContent { display: none; }
+
         .admin-nav { background: var(--dark-bg); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; }
         .logout-btn { background: transparent; border: 1px solid white; color: white; padding: 5px 15px; cursor: pointer; }
         
@@ -107,7 +110,6 @@
                     <div class="row">
                         <div class="col">
                             <label>Date (Text or Picker)</label>
-                            <!-- Changed to text to allow flexible input like "Every Sunday" or specific dates -->
                             <input type="text" id="annDate" placeholder="e.g., Every Friday or Jan 24, 2026">
                         </div>
                         <div class="col">
@@ -124,8 +126,9 @@
                         </div>
                     </div>
                     <div>
-                        <label>Image Link (Optional)</label>
-                        <input type="url" id="annImageLink" placeholder="https://example.com/photo.jpg">
+                        <label>Image Link OR Embed Code (Optional)</label>
+                        <!-- CHANGED to textarea to allow pasting large embed codes easily -->
+                        <textarea id="annImageLink" rows="2" placeholder="Paste image URL (https://...) OR Embed Code (<iframe>...)"></textarea>
                     </div>
                     <div>
                         <label>Description</label>
@@ -158,13 +161,13 @@
                         </div>
                         <div class="col">
                             <label>Time (Flexible)</label>
-                            <!-- Changed type="time" to type="text" for flexibility -->
                             <input type="text" id="evtTime" placeholder="e.g., 8:00 AM - 10:00 AM">
                         </div>
                     </div>
                     <div>
-                        <label>Image Link (Optional)</label>
-                        <input type="url" id="evtImage" placeholder="https://example.com/banner.jpg">
+                        <label>Image Link OR Embed Code (Optional)</label>
+                        <!-- CHANGED to textarea -->
+                        <textarea id="evtImage" rows="2" placeholder="Paste image URL (https://...) OR Embed Code (<iframe>...)"></textarea>
                     </div>
                     <div>
                         <label>Description</label>
@@ -179,17 +182,6 @@
                 <div id="eventList" class="item-list">
                     <p style="padding: 1rem; color: #888;">Loading...</p>
                 </div>
-            </div>
-
-            <!-- CANVA DESIGN PANEL -->
-            <div class="panel">
-                <h2 style="color: var(--primary-gold); margin-bottom: 1rem;">Church Resource</h2>
-                <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
-                    <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
-                        src="https://www.canva.com/design/DAGOpEs2pgQ/hC9z-hp6b94XGmfP_o92Jw/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
-                    </iframe>
-                </div>
-                <a href="https://www.canva.com/design/DAGOpEs2pgQ/hC9z-hp6b94XGmfP_o92Jw/view?utm_content=DAGOpEs2pgQ&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link" target="_blank" rel="noopener">Church</a> by Wendel Flores
             </div>
 
         </div>
@@ -224,7 +216,6 @@
             if (user) {
                 document.getElementById('authLoading').style.display = 'none';
                 document.getElementById('adminContent').style.display = 'block';
-                // Remove display none from body now that we know we have content or loading screen ready
                 document.body.style.display = "block";
             } else {
                 window.location.replace("login.html"); 
@@ -238,21 +229,17 @@
             signOut(auth).then(() => window.location.href = "login.html");
         });
 
-        // --- HELPER: FORMATS (Updated for flexible inputs) ---
-        // If user types a real date (2026-01-01), format it nicely. If they type text ("Every Monday"), keep it.
+        // --- HELPER: FORMATS ---
         function formatFlexibleDate(input) {
             if (!input) return "";
-            // Check if input looks like YYYY-MM-DD
             if (input.match(/^\d{4}-\d{2}-\d{2}$/)) {
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };
                 return new Date(input).toLocaleDateString('en-US', options);
             }
-            return input; // Return text as is
+            return input;
         }
 
-        // For getting Month/Day for the calendar icon box
         function getMonthAndDay(input) {
-            // Try to parse as date first
             const date = new Date(input);
             if (!isNaN(date.getTime())) {
                 return {
@@ -260,7 +247,6 @@
                     day: String(date.getDate()).padStart(2, '0')
                 };
             }
-            // If text (e.g. "Every Sunday"), just return generic or partial
             return { month: "EVT", day: "📅" }; 
         }
 
@@ -314,17 +300,15 @@
                     dateStr: displayDate, // Stores formatted or raw text
                     ministry: document.getElementById('annMinistry').value,
                     content: document.getElementById('annContent').value,
-                    imageUrl: document.getElementById('annImageLink').value,
+                    imageUrl: document.getElementById('annImageLink').value, // Now accepts Embed Code too
                     createdAt: Date.now()
                 };
 
                 if (id) {
-                    // Update existing
                     await updateDoc(doc(db, "announcements", id), data);
                     alert("Announcement Updated!");
-                    window.resetAnnForm(); // Clear edit mode
+                    window.resetAnnForm();
                 } else {
-                    // Create new
                     await addDoc(collection(db, "announcements"), data);
                     alert("Announcement Posted!");
                     e.target.reset();
@@ -343,15 +327,15 @@
             try {
                 const id = document.getElementById('evtEditId').value;
                 const rawDate = document.getElementById('evtDate').value;
-                const dateParts = getMonthAndDay(rawDate); // Calculate calendar icon text
+                const dateParts = getMonthAndDay(rawDate);
 
                 const data = {
                     title: document.getElementById('evtTitle').value,
                     month: dateParts.month,
                     day: dateParts.day,
-                    time: document.getElementById('evtTime').value, // Allows flexible text
+                    time: document.getElementById('evtTime').value,
                     desc: document.getElementById('evtDesc').value,
-                    imageUrl: document.getElementById('evtImage').value,
+                    imageUrl: document.getElementById('evtImage').value, // Now accepts Embed Code
                     createdAt: Date.now()
                 };
 
@@ -407,7 +391,6 @@
             items.forEach(data => {
                 const div = document.createElement('div');
                 div.className = "list-item";
-                // JSON.stringify helps pass the data object to the edit function safely
                 const dataString = JSON.stringify(data).replace(/"/g, '&quot;'); 
                 div.innerHTML = `
                     <div class="item-details">
@@ -485,10 +468,7 @@
         window.editEvent = function(data) {
             document.getElementById('evtEditId').value = data.id;
             document.getElementById('evtTitle').value = data.title;
-            // We can't perfectly reconstruct the raw date input if we only saved "JAN", 
-            // but we can put the time back. For date, user might need to re-enter if they want to change it cleanly.
-            // Or just put the flexible string back if possible.
-            document.getElementById('evtDate').value = ""; // Clear for safety or put logic to guess
+            document.getElementById('evtDate').value = ""; // Can't easily restore raw flexible date
             document.getElementById('evtTime').value = data.time;
             document.getElementById('evtImage').value = data.imageUrl || "";
             document.getElementById('evtDesc').value = data.desc;
