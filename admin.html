@@ -1,311 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | TCF Admin</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* CRITICAL: Body is hidden by default. Only JS can reveal it. */
-        body { background: #f4f4f4; padding-bottom: 5rem; display: none; }
-        
-        .admin-nav { background: var(--dark-bg); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; }
-        .logout-btn { background: transparent; border: 1px solid white; color: white; padding: 5px 15px; cursor: pointer; }
-        
-        .admin-container { max-width: 1000px; margin: 2rem auto; padding: 0 20px; }
-        .panel { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 2rem; }
-        
-        /* Form Styles */
-        .form-grid { display: grid; gap: 1rem; }
-        .row { display: flex; gap: 1rem; }
-        .col { flex: 1; }
-        
-        label { font-weight: bold; font-size: 0.9rem; color: #555; margin-bottom: 5px; display: block; }
-        select, input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; }
-        
-        .add-btn { background: var(--primary-gold); color: white; border: none; padding: 12px 20px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        .add-btn:hover { background: #b08d45; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCF Admin Panel</title>
+<link rel="stylesheet" href="style.css">
 
-        /* List Styles */
-        .item-list { margin-top: 1rem; border-top: 1px solid #eee; max-height: 400px; overflow-y: auto; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #eee; }
-        .delete-btn { background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-        .delete-btn:hover { background: #cc0000; }
-        
-        .item-details { display: flex; flex-direction: column; }
-        .item-meta { font-size: 0.85rem; color: #888; }
-        .error-msg { color: red; padding: 1rem; background: #ffe6e6; border-radius: 4px; }
-        .img-toggle { display: flex; gap: 15px; margin-bottom: 10px; font-size: 0.9rem; }
-        .hidden-input { display: none; }
-    </style>
+<style>
+body { display:none; background:#f4f4f4; padding-bottom:4rem; }
+.admin-nav {
+    background:#111; color:#fff;
+    padding:1rem 5%;
+    display:flex; justify-content:space-between; align-items:center;
+}
+.logout-btn { background:none; border:1px solid #fff; color:#fff; padding:6px 14px; cursor:pointer; }
+
+.admin-container { max-width:1000px; margin:2rem auto; padding:0 20px; }
+.panel { background:#fff; padding:2rem; border-radius:8px; margin-bottom:2rem; }
+
+.form-grid { display:grid; gap:1rem; }
+.row { display:flex; gap:1rem; }
+.col { flex:1; }
+
+input, textarea, select {
+    width:100%; padding:10px;
+    border:1px solid #ddd; border-radius:4px;
+}
+
+.add-btn { background:#C5A059; color:#fff; border:none; padding:12px; font-weight:bold; cursor:pointer; }
+.add-btn.secondary { background:#999; margin-top:6px; }
+
+.item-list { border-top:1px solid #eee; margin-top:1rem; }
+.list-item {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:1rem 0; border-bottom:1px solid #eee;
+}
+.item-meta { font-size:0.85rem; color:#777; }
+
+.action-btn { border:none; padding:6px 10px; cursor:pointer; border-radius:4px; }
+.edit-btn { background:#3498db; color:#fff; }
+.delete-btn { background:#e74c3c; color:#fff; margin-left:5px; }
+</style>
 </head>
+
 <body>
 
-    <nav class="admin-nav">
-        <h3>TCF Admin Panel</h3>
-        <button id="logoutBtn" class="logout-btn">Log Out</button>
-    </nav>
+<nav class="admin-nav">
+    <h3>TCF Admin Panel</h3>
+    <button id="logoutBtn" class="logout-btn">Log Out</button>
+</nav>
 
-    <div class="admin-container">
-        
-        <!-- ANNOUNCEMENTS MANAGER -->
-        <div class="panel">
-            <h2 style="color: var(--primary-gold); margin-bottom: 1rem;">Post Announcement</h2>
-            <form id="announcementForm" class="form-grid">
-                <div>
-                    <label>Title</label>
-                    <input type="text" id="annTitle" placeholder="e.g., Youth Camp Registration" required>
-                </div>
-                
-                <div class="row">
-                    <div class="col">
-                        <label>Date</label>
-                        <input type="date" id="annDate" required>
-                    </div>
-                    <div class="col">
-                        <label>Ministry Group</label>
-                        <select id="annMinistry">
-                            <option value="Church Wide">Church Wide</option>
-                            <option value="Todah Max Mom">Todah Max Mom</option>
-                            <option value="Barakong Tatay">Barakong Tatay</option>
-                            <option value="Shabach / Halal">Shabach / Halal (Youth)</option>
-                            <option value="Yadah Cutie">Yadah Cutie (Kids)</option>
-                            <option value="Praise Team">Praise Team</option>
-                            <option value="Multimedia">Multimedia</option>
-                        </select>
-                    </div>
-                </div>
+<div class="admin-container">
 
-                <div>
-                    <label>Image Source</label>
-                    <div class="img-toggle">
-                        <label><input type="radio" name="annImgType" value="link" checked onchange="toggleInput('ann', 'link')"> Link</label>
-                        <label><input type="radio" name="annImgType" value="upload" onchange="toggleInput('ann', 'upload')"> Upload File (Disabled)</label>
-                    </div>
-                    <input type="url" id="annImageLink" placeholder="https://example.com/photo.jpg">
-                </div>
+<!-- ANNOUNCEMENTS -->
+<div class="panel">
+<h2>Announcement</h2>
 
-                <div>
-                    <label>Description</label>
-                    <textarea id="annContent" rows="3" placeholder="What is this announcement about?" required></textarea>
-                </div>
+<form id="announcementForm" class="form-grid">
+<input type="text" id="annTitle" placeholder="Title" required>
 
-                <button type="submit" class="add-btn">Post Announcement</button>
-            </form>
+<div class="row">
+<div class="col">
+<label>Date (Optional)</label>
+<input type="date" id="annDate">
+</div>
+<div class="col">
+<label>Schedule (Optional)</label>
+<input type="text" id="annSchedule" placeholder="Everyday, 6:00 PM to 8:00 PM">
+</div>
+</div>
 
-            <h3 style="margin-top: 2rem;">Manage Announcements</h3>
-            <div id="announcementList" class="item-list">
-                <p style="padding: 1rem; color: #888;">Loading...</p>
-            </div>
-        </div>
+<select id="annMinistry">
+<option>Church Wide</option>
+<option>Todah Max Mom</option>
+<option>Barakong Tatay</option>
+<option>Shabach / Halal</option>
+<option>Yadah Cutie</option>
+<option>Praise Team</option>
+<option>Multimedia</option>
+</select>
 
-        <!-- EVENTS MANAGER -->
-        <div class="panel">
-            <h2 style="color: var(--primary-gold); margin-bottom: 1rem;">Add Event</h2>
-            <form id="eventForm" class="form-grid">
-                <div>
-                    <label>Event Name</label>
-                    <input type="text" id="evtTitle" placeholder="e.g., Worship Night" required>
-                </div>
+<input type="url" id="annImageLink" placeholder="Image URL (optional)">
+<textarea id="annContent" placeholder="Description" required></textarea>
 
-                <div class="row">
-                    <div class="col">
-                        <label>Date</label>
-                        <input type="date" id="evtDate" required>
-                    </div>
-                    <div class="col">
-                        <label>Time</label>
-                        <input type="time" id="evtTime" required>
-                    </div>
-                </div>
+<button class="add-btn" id="annSubmitBtn">Post Announcement</button>
+<button type="button" class="add-btn secondary" id="annCancelBtn" style="display:none">Cancel Edit</button>
+</form>
 
-                <div>
-                    <label>Image Link (Optional)</label>
-                    <input type="url" id="evtImage" placeholder="https://example.com/banner.jpg">
-                </div>
+<div id="announcementList" class="item-list"></div>
+</div>
 
-                <div>
-                    <label>Description</label>
-                    <textarea id="evtDesc" rows="3" placeholder="Event details..." required></textarea>
-                </div>
+<!-- EVENTS -->
+<div class="panel">
+<h2>Event</h2>
 
-                <button type="submit" class="add-btn">Add Event</button>
-            </form>
+<form id="eventForm" class="form-grid">
+<input type="text" id="evtTitle" placeholder="Event Name" required>
 
-            <h3 style="margin-top: 2rem;">Event List</h3>
-            <div id="eventList" class="item-list">
-                <p style="padding: 1rem; color: #888;">Loading...</p>
-            </div>
-        </div>
+<div class="row">
+<div class="col">
+<label>Date (Optional)</label>
+<input type="date" id="evtDate">
+</div>
+<div class="col">
+<label>Schedule (Optional)</label>
+<input type="text" id="evtSchedule" placeholder="Saturday, 4:00 PM to 7:00 PM">
+</div>
+</div>
 
-    </div>
+<input type="url" id="evtImage" placeholder="Image URL (optional)">
+<textarea id="evtDesc" placeholder="Event details" required></textarea>
 
-    <script>
-        function toggleInput(prefix, type) {
-            // kept simple for link-only mode
-            if(type === 'upload') alert("Upload requires billing. Please stick to links for free hosting!");
-        }
-    </script>
+<button class="add-btn" id="evtSubmitBtn">Add Event</button>
+<button type="button" class="add-btn secondary" id="evtCancelBtn" style="display:none">Cancel Edit</button>
+</form>
 
-    <script type="module">
-        import { auth, db, signOut, onAuthStateChanged, collection, addDoc, query, onSnapshot, deleteDoc, doc } from './firebase-config.js';
+<div id="eventList" class="item-list"></div>
+</div>
 
-        // 1. AUTH CHECK (STRICT MODE)
-        // We do not render the UI until we know the user is logged in.
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in, show the content
-                document.body.style.display = 'block';
-                console.log("Logged in as:", user.email);
-            } else {
-                // User is NOT signed in, redirect to login page immediately
-                console.log("Not logged in. Redirecting...");
-                window.location.replace("login.html"); 
-            }
-        });
+</div>
 
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => window.location.href = "login.html");
-        });
+<script type="module">
+import {
+auth, db, signOut, onAuthStateChanged,
+collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot
+} from './firebase-config.js';
 
-        // --- HELPER: FORMATS ---
-        function formatDateReadable(dateString) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('en-US', options);
-        }
-        function formatTime12Hour(timeString) {
-            if (!timeString) return "";
-            let [hours, minutes] = timeString.split(':');
-            hours = parseInt(hours);
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12; 
-            return `${hours}:${minutes} ${ampm}`;
-        }
-        function getMonthAndDay(dateString) {
-            const parts = dateString.split('-'); 
-            const localDate = new Date(parts[0], parts[1]-1, parts[2]);
-            return {
-                month: localDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
-                day: String(localDate.getDate()).padStart(2, '0')
-            };
-        }
+onAuthStateChanged(auth, user=>{
+    if(user) document.body.style.display="block";
+    else location.href="login.html";
+});
 
-        // 2. ADD ANNOUNCEMENT
-        document.getElementById('announcementForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = "Posting...";
-            
-            try {
-                const dateVal = document.getElementById('annDate').value;
-                const formattedDate = formatDateReadable(dateVal); 
-                const imgLink = document.getElementById('annImageLink').value;
+logoutBtn.onclick=()=>signOut(auth);
 
-                await addDoc(collection(db, "announcements"), {
-                    title: document.getElementById('annTitle').value,
-                    dateStr: formattedDate,
-                    ministry: document.getElementById('annMinistry').value,
-                    content: document.getElementById('annContent').value,
-                    imageUrl: imgLink, 
-                    createdAt: Date.now()
-                });
-                e.target.reset();
-                alert("Announcement Posted!");
-            } catch (err) { console.error(err); alert("Error: " + err.message); }
-            btn.innerText = originalText;
-        });
+let editingAnn=null;
+let editingEvt=null;
 
-        // 3. ADD EVENT
-        document.getElementById('eventForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = "Adding...";
-            
-            try {
-                const dateVal = document.getElementById('evtDate').value;
-                const timeVal = document.getElementById('evtTime').value;
-                const dateParts = getMonthAndDay(dateVal); 
-                const timeFormatted = formatTime12Hour(timeVal);
-                const imgLink = document.getElementById('evtImage').value;
+function resetAnn(){
+    announcementForm.reset();
+    editingAnn=null;
+    annSubmitBtn.innerText="Post Announcement";
+    annCancelBtn.style.display="none";
+}
 
-                await addDoc(collection(db, "events"), {
-                    title: document.getElementById('evtTitle').value,
-                    month: dateParts.month,
-                    day: dateParts.day,
-                    time: timeFormatted,
-                    desc: document.getElementById('evtDesc').value,
-                    imageUrl: imgLink,
-                    createdAt: Date.now()
-                });
-                e.target.reset();
-                alert("Event Added!");
-            } catch (err) { console.error(err); alert("Error: " + err.message); }
-            btn.innerText = originalText;
-        });
+function resetEvt(){
+    eventForm.reset();
+    editingEvt=null;
+    evtSubmitBtn.innerText="Add Event";
+    evtCancelBtn.style.display="none";
+}
 
-        // 4. LOAD LISTS (Realtime)
-        const qAnn = query(collection(db, "announcements"));
-        onSnapshot(qAnn, (snapshot) => {
-            const list = document.getElementById('announcementList');
-            list.innerHTML = "";
-            if (snapshot.empty) { list.innerHTML = "<p style='padding:1rem'>No announcements yet.</p>"; return; }
+annCancelBtn.onclick=resetAnn;
+evtCancelBtn.onclick=resetEvt;
 
-            let items = [];
-            snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-            items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+announcementForm.onsubmit=async e=>{
+e.preventDefault();
+const data={
+title:annTitle.value,
+dateStr:annDate.value?new Date(annDate.value).toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"}):"",
+schedule:annSchedule.value||"",
+ministry:annMinistry.value,
+content:annContent.value,
+imageUrl:annImageLink.value||"",
+createdAt:Date.now()
+};
+if(editingAnn)
+await updateDoc(doc(db,"announcements",editingAnn),data);
+else
+await addDoc(collection(db,"announcements"),data);
+resetAnn();
+};
 
-            items.forEach(data => {
-                const div = document.createElement('div');
-                div.className = "list-item";
-                div.innerHTML = `
-                    <div class="item-details">
-                        <strong>${data.title}</strong>
-                        <span class="item-meta">${data.ministry} | ${data.dateStr}</span>
-                    </div>
-                    <button class="delete-ann-btn delete-btn" data-id="${data.id}">Delete</button>
-                `;
-                list.appendChild(div);
-            });
-            
-            document.querySelectorAll('.delete-ann-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    if(confirm("Delete this?")) await deleteDoc(doc(db, "announcements", e.target.dataset.id));
-                });
-            });
-        }, (err) => document.getElementById('announcementList').innerHTML = `<p class="error-msg">${err.message}</p>`);
-        
-        const qEvt = query(collection(db, "events"));
-        onSnapshot(qEvt, (snapshot) => {
-            const list = document.getElementById('eventList');
-            list.innerHTML = "";
-            if (snapshot.empty) { list.innerHTML = "<p style='padding:1rem'>No events found.</p>"; return; }
+eventForm.onsubmit=async e=>{
+e.preventDefault();
+const d=evtDate.value?new Date(evtDate.value):null;
+const data={
+title:evtTitle.value,
+month:d?d.toLocaleDateString("en-US",{month:"short"}).toUpperCase():"",
+day:d?String(d.getDate()).padStart(2,"0"):"",
+schedule:evtSchedule.value||"",
+desc:evtDesc.value,
+imageUrl:evtImage.value||"",
+createdAt:Date.now()
+};
+if(editingEvt)
+await updateDoc(doc(db,"events",editingEvt),data);
+else
+await addDoc(collection(db,"events"),data);
+resetEvt();
+};
 
-            let items = [];
-            snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-            items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+onSnapshot(collection(db,"announcements"),snap=>{
+announcementList.innerHTML="";
+snap.forEach(s=>{
+const d=s.data();
+const div=document.createElement("div");
+div.className="list-item";
+div.innerHTML=`
+<div>
+<strong>${d.title}</strong>
+<div class="item-meta">${d.ministry} ${d.schedule? "• "+d.schedule:""}</div>
+</div>
+<div>
+<button class="action-btn edit-btn">Edit</button>
+<button class="action-btn delete-btn">Delete</button>
+</div>`;
+div.querySelector(".edit-btn").onclick=()=>{
+editingAnn=s.id;
+annTitle.value=d.title;
+annDate.value="";
+annSchedule.value=d.schedule||"";
+annMinistry.value=d.ministry;
+annContent.value=d.content;
+annImageLink.value=d.imageUrl||"";
+annSubmitBtn.innerText="Update Announcement";
+annCancelBtn.style.display="block";
+};
+div.querySelector(".delete-btn").onclick=()=>confirm("Delete?")&&deleteDoc(doc(db,"announcements",s.id));
+announcementList.appendChild(div);
+});
+});
 
-            items.forEach(data => {
-                const div = document.createElement('div');
-                div.className = "list-item";
-                div.innerHTML = `
-                    <div class="item-details">
-                        <strong>${data.title}</strong>
-                        <span class="item-meta">${data.month} ${data.day} | ${data.time}</span>
-                    </div>
-                    <button class="delete-evt-btn delete-btn" data-id="${data.id}">Delete</button>
-                `;
-                list.appendChild(div);
-            });
-            
-            document.querySelectorAll('.delete-evt-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    if(confirm("Delete this event?")) await deleteDoc(doc(db, "events", e.target.dataset.id));
-                });
-            });
-        }, (err) => document.getElementById('eventList').innerHTML = `<p class="error-msg">${err.message}</p>`);
+onSnapshot(collection(db,"events"),snap=>{
+eventList.innerHTML="";
+snap.forEach(s=>{
+const d=s.data();
+const div=document.createElement("div");
+div.className="list-item";
+div.innerHTML=`
+<div>
+<strong>${d.title}</strong>
+<div class="item-meta">${d.schedule||""}</div>
+</div>
+<div>
+<button class="action-btn edit-btn">Edit</button>
+<button class="action-btn delete-btn">Delete</button>
+</div>`;
+div.querySelector(".edit-btn").onclick=()=>{
+editingEvt=s.id;
+evtTitle.value=d.title;
+evtSchedule.value=d.schedule||"";
+evtDesc.value=d.desc;
+evtImage.value=d.imageUrl||"";
+evtSubmitBtn.innerText="Update Event";
+evtCancelBtn.style.display="block";
+};
+div.querySelector(".delete-btn").onclick=()=>confirm("Delete?")&&deleteDoc(doc(db,"events",s.id));
+eventList.appendChild(div);
+});
+});
+</script>
 
-    </script>
 </body>
 </html>
