@@ -51,6 +51,12 @@
         .item-details { display: flex; flex-direction: column; }
         .item-meta { font-size: 0.85rem; color: #888; }
         .error-msg { color: red; padding: 1rem; background: #ffe6e6; border-radius: 4px; }
+        .img-toggle { display: flex; gap: 15px; margin-bottom: 10px; font-size: 0.9rem; }
+        .hidden-input { display: none; }
+        
+        /* Gallery Preview */
+        .preview-img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; margin-right: 10px; }
+        .list-item-content { display: flex; align-items: center; }
     </style>
 </head>
 <body>
@@ -104,6 +110,7 @@
                     <div class="row">
                         <div class="col">
                             <label>Date (Text or Picker)</label>
+                            <!-- Changed to text to allow flexible input like "Every Sunday" or specific dates -->
                             <input type="text" id="annDate" placeholder="e.g., Every Friday or Jan 24, 2026">
                         </div>
                         <div class="col">
@@ -155,6 +162,7 @@
                         </div>
                         <div class="col">
                             <label>Time (Flexible)</label>
+                            <!-- Changed type="time" to type="text" for flexibility -->
                             <input type="text" id="evtTime" placeholder="e.g., 8:00 AM - 10:00 AM">
                         </div>
                     </div>
@@ -176,6 +184,17 @@
                 <div id="eventList" class="item-list">
                     <p style="padding: 1rem; color: #888;">Loading...</p>
                 </div>
+            </div>
+
+            <!-- CANVA DESIGN PANEL -->
+            <div class="panel">
+                <h2 style="color: var(--primary-gold); margin-bottom: 1rem;">Church Resource</h2>
+                <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
+                    <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+                        src="https://www.canva.com/design/DAGOpEs2pgQ/hC9z-hp6b94XGmfP_o92Jw/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+                    </iframe>
+                </div>
+                <a href="https://www.canva.com/design/DAGOpEs2pgQ/hC9z-hp6b94XGmfP_o92Jw/view?utm_content=DAGOpEs2pgQ&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link" target="_blank" rel="noopener">Church</a> by Wendel Flores
             </div>
 
         </div>
