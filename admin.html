@@ -51,12 +51,6 @@
         .item-details { display: flex; flex-direction: column; }
         .item-meta { font-size: 0.85rem; color: #888; }
         .error-msg { color: red; padding: 1rem; background: #ffe6e6; border-radius: 4px; }
-        .img-toggle { display: flex; gap: 15px; margin-bottom: 10px; font-size: 0.9rem; }
-        .hidden-input { display: none; }
-        
-        /* Gallery Preview */
-        .preview-img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; margin-right: 10px; }
-        .list-item-content { display: flex; align-items: center; }
     </style>
 </head>
 <body>
@@ -127,7 +121,7 @@
                     </div>
                     <div>
                         <label>Image Link OR Embed Code (Optional)</label>
-                        <!-- CHANGED to textarea to allow pasting large embed codes easily -->
+                        <!-- CHANGED to textarea to allow pasting long embed codes -->
                         <textarea id="annImageLink" rows="2" placeholder="Paste image URL (https://...) OR Embed Code (<iframe>...)"></textarea>
                     </div>
                     <div>
@@ -216,6 +210,7 @@
             if (user) {
                 document.getElementById('authLoading').style.display = 'none';
                 document.getElementById('adminContent').style.display = 'block';
+                // Remove display none from body now that we know we have content or loading screen ready
                 document.body.style.display = "block";
             } else {
                 window.location.replace("login.html"); 
@@ -229,17 +224,21 @@
             signOut(auth).then(() => window.location.href = "login.html");
         });
 
-        // --- HELPER: FORMATS ---
+        // --- HELPER: FORMATS (Updated for flexible inputs) ---
+        // If user types a real date (2026-01-01), format it nicely. If they type text ("Every Monday"), keep it.
         function formatFlexibleDate(input) {
             if (!input) return "";
+            // Check if input looks like YYYY-MM-DD
             if (input.match(/^\d{4}-\d{2}-\d{2}$/)) {
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };
                 return new Date(input).toLocaleDateString('en-US', options);
             }
-            return input;
+            return input; // Return text as is
         }
 
+        // For getting Month/Day for the calendar icon box
         function getMonthAndDay(input) {
+            // Try to parse as date first
             const date = new Date(input);
             if (!isNaN(date.getTime())) {
                 return {
@@ -247,6 +246,7 @@
                     day: String(date.getDate()).padStart(2, '0')
                 };
             }
+            // If text (e.g. "Every Sunday"), just return generic or partial
             return { month: "EVT", day: "📅" }; 
         }
 
@@ -305,10 +305,12 @@
                 };
 
                 if (id) {
+                    // Update existing
                     await updateDoc(doc(db, "announcements", id), data);
                     alert("Announcement Updated!");
-                    window.resetAnnForm();
+                    window.resetAnnForm(); // Clear edit mode
                 } else {
+                    // Create new
                     await addDoc(collection(db, "announcements"), data);
                     alert("Announcement Posted!");
                     e.target.reset();
@@ -327,13 +329,13 @@
             try {
                 const id = document.getElementById('evtEditId').value;
                 const rawDate = document.getElementById('evtDate').value;
-                const dateParts = getMonthAndDay(rawDate);
+                const dateParts = getMonthAndDay(rawDate); // Calculate calendar icon text
 
                 const data = {
                     title: document.getElementById('evtTitle').value,
                     month: dateParts.month,
                     day: dateParts.day,
-                    time: document.getElementById('evtTime').value,
+                    time: document.getElementById('evtTime').value, // Allows flexible text
                     desc: document.getElementById('evtDesc').value,
                     imageUrl: document.getElementById('evtImage').value, // Now accepts Embed Code
                     createdAt: Date.now()
@@ -391,6 +393,7 @@
             items.forEach(data => {
                 const div = document.createElement('div');
                 div.className = "list-item";
+                // JSON.stringify helps pass the data object to the edit function safely
                 const dataString = JSON.stringify(data).replace(/"/g, '&quot;'); 
                 div.innerHTML = `
                     <div class="item-details">
@@ -468,7 +471,10 @@
         window.editEvent = function(data) {
             document.getElementById('evtEditId').value = data.id;
             document.getElementById('evtTitle').value = data.title;
-            document.getElementById('evtDate').value = ""; // Can't easily restore raw flexible date
+            // We can't perfectly reconstruct the raw date input if we only saved "JAN", 
+            // but we can put the time back. For date, user might need to re-enter if they want to change it cleanly.
+            // Or just put the flexible string back if possible.
+            document.getElementById('evtDate').value = ""; // Clear for safety or put logic to guess
             document.getElementById('evtTime').value = data.time;
             document.getElementById('evtImage').value = data.imageUrl || "";
             document.getElementById('evtDesc').value = data.desc;
