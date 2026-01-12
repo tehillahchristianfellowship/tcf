@@ -16,8 +16,12 @@
         .date-day { display: block; font-size: 1.5rem; font-weight: bold; color: white; }
         .event-body { padding: 2rem; flex-grow: 1; }
         
-        /* NEW: Image Style */
+        /* Image Style */
         .event-img { width: 100%; height: 200px; object-fit: cover; display: block; }
+        
+        /* Embed Container Style - Ensures iframe fits */
+        .embed-container { width: 100%; overflow: hidden; }
+        .embed-container iframe { width: 100%; border: none; }
     </style>
 </head>
 <body>
@@ -30,6 +34,8 @@
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="about.html">About Us</a>
+            <!-- Removed Ministries -->
+            <a href="gallery.html">Gallery</a>
             <a href="events.html" class="active">Events</a>
             <a href="give.html">Give</a>
             <a href="announcements.html">Announcements</a>
@@ -60,14 +66,28 @@
 
     <!-- DYNAMIC LOGIC -->
     <script type="module">
-        import { db, collection, getDocs, query } from './firebase-config.js';
+        // Import Firebase directly (Embedded Config logic)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBIXy1hHTjde62hjbLw3nwxMNSCY7HFGns",
+            authDomain: "tehillah-website-9dd14.firebaseapp.com",
+            projectId: "tehillah-website-9dd14",
+            storageBucket: "tehillah-website-9dd14.firebasestorage.app",
+            messagingSenderId: "40546309853",
+            appId: "1:40546309853:web:4222b7887f6b86ec2e6d34",
+            measurementId: "G-MSERH232QZ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         const container = document.getElementById('eventsContainer');
         const loading = document.getElementById('loading');
 
         async function loadEvents() {
             try {
-                // Fetch events (without sorting on server to prevent errors)
                 const q = query(collection(db, "events"));
                 const snapshot = await getDocs(q);
                 
@@ -78,19 +98,29 @@
                     return;
                 }
 
-                // Sort events in browser (Newest created first)
                 let items = [];
                 snapshot.forEach(doc => items.push(doc.data()));
                 items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-                // Display events
                 items.forEach(data => {
-                    // NEW: Check if image URL exists
-                    const imageHTML = data.imageUrl ? `<img src="${data.imageUrl}" alt="${data.title}" class="event-img">` : '';
+                    // --- SMART DISPLAY LOGIC ---
+                    let displayMedia = '';
+                    
+                    if (data.imageUrl) {
+                        const content = data.imageUrl.trim();
+                        // Check if it starts with HTML tag like <div or <iframe
+                        if (content.startsWith('<')) {
+                            // Render as raw HTML (Embed)
+                            displayMedia = `<div class="embed-container">${content}</div>`;
+                        } else {
+                            // Render as regular Image
+                            displayMedia = `<img src="${content}" alt="${data.title}" class="event-img">`;
+                        }
+                    }
 
                     const card = `
                         <div class="event-card animate-fade">
-                            ${imageHTML}
+                            ${displayMedia}
                             <div class="event-header">
                                 <div class="date-box">
                                     <span class="date-month">${data.month}</span>
