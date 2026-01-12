@@ -226,6 +226,14 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         .news-date { font-size: 0.8rem; color: #888; text-transform: uppercase; font-weight: bold; }
+        .news-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            background-color: #eee;
+        }
 
         /* --- RESOURCES TAB --- */
         .resource-link {
@@ -256,29 +264,29 @@
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="about.html">About Us</a>
+            <a href="ministries.html">Ministries</a>
             <a href="events.html">Events</a>
-            <a href="announcements.html" class="active">Announcements</a>
+            <a href="announcements.html">Announcements</a>
             <a href="contact.html" class="btn-visit">Contact Us</a>
         </div>
     </nav>
 
     <!-- HERO HEADER -->
     <header class="hero hero-page">
-        <h1 class="animate-fade">Announcements</h1>
-        <p class="animate-fade delay-1">Stay up to date with what's happening at TCF.</p>
+        <h1 class="animate-fade">Multimedia Team</h1>
+        <p class="animate-fade delay-1">Schedules, Assignments & Resources for 2026</p>
     </header>
 
-    <!-- ADDED: ANNOUNCEMENT NAVIGATION (LINKS BACK TO MAIN ANNOUNCEMENTS) -->
+    <!-- ANNOUNCEMENT NAVIGATION -->
     <div class="tabs-container">
         <div class="tabs-list">
-            <!-- These are links back to the announcements.html page -->
+            <a href="announcements.html" class="nav-tab-btn">All News</a>
             <a href="announcements.html" class="nav-tab-btn">Church Wide</a>
             <a href="announcements.html" class="nav-tab-btn">Todah Max Mom</a>
             <a href="announcements.html" class="nav-tab-btn">Barakong Tatay</a>
             <a href="announcements.html" class="nav-tab-btn">Shabach / Halal</a>
             <a href="announcements.html" class="nav-tab-btn">Yadah Cutie</a>
             <a href="announcements.html" class="nav-tab-btn">Praise Team</a>
-            <!-- Multimedia is active here -->
             <a href="#" class="nav-tab-btn active">Multimedia</a>
         </div>
     </div>
@@ -307,8 +315,6 @@
 
         <!-- 2. ASSIGNMENTS TAB -->
         <div id="assignments" class="dash-content">
-            
-            <!-- Permanent Roles Box -->
             <div class="perm-box">
                 <h3 style="margin-bottom:1.5rem; color:white; border-bottom:1px solid #555; padding-bottom:10px;">Permanent Roles</h3>
                 <div class="perm-item">
@@ -335,29 +341,12 @@
             </div>
         </div>
 
-        <!-- 3. TEAM NEWS TAB (New Request) -->
+        <!-- 3. TEAM NEWS TAB (DYNAMIC) -->
         <div id="news" class="dash-content">
             <h2 style="margin-bottom: 1.5rem; text-align: center;">Team Announcements</h2>
-            
-            <!-- Announcement 1 -->
-            <div class="news-item">
-                <div class="news-date">January 4, 2026</div>
-                <h3>New Software Update</h3>
-                <p>We are upgrading our livestream software next week. Please arrive 30 minutes early on Sunday for a quick briefing.</p>
-            </div>
-
-            <!-- Announcement 2 -->
-            <div class="news-item">
-                <div class="news-date">December 28, 2025</div>
-                <h3>Thank You!</h3>
-                <p>Great job on the Christmas special! The lighting and sound were perfect. Let's keep up the excellence for the New Year.</p>
-            </div>
-
-            <!-- Announcement 3 -->
-            <div class="news-item">
-                <div class="news-date">Important</div>
-                <h3>Equipment Care</h3>
-                <p>Please remember to cover the cameras after service and coil the cables properly. Thank you!</p>
+            <div id="newsLoading" style="text-align:center; padding:2rem; color:#666;">Loading updates...</div>
+            <div id="newsContainer">
+                <!-- Dynamic Content from Firebase -->
             </div>
         </div>
 
@@ -392,37 +381,87 @@
         <p>&copy; 2026 TCF Multimedia Team.</p>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC (Adapted from your file) -->
-    <script>
-        // --- DATA CONFIGURATION ---
+    <!-- JAVASCRIPT LOGIC -->
+    <script type="module">
+        // Import Firebase to load News
+        import { db, collection, getDocs, query, orderBy, onSnapshot } from './firebase-config.js';
+
+        // --- FETCH TEAM NEWS ---
+        const newsContainer = document.getElementById('newsContainer');
+        const newsLoading = document.getElementById('newsLoading');
+
+        // Only fetch when 'news' tab is clicked or on load if active? 
+        // We'll load immediately but only show if tab active.
+        const q = query(collection(db, "announcements"));
+        onSnapshot(q, (snapshot) => {
+            newsContainer.innerHTML = "";
+            let items = [];
+            
+            // Filter client-side for "Multimedia"
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                if(data.ministry === "Multimedia") {
+                    items.push(data);
+                }
+            });
+
+            // Sort (Newest First)
+            items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+            if(items.length === 0) {
+                newsContainer.innerHTML = `<p style="text-align:center; color:#888;">No team updates yet.</p>`;
+            } else {
+                items.forEach(item => {
+                    const imgHTML = item.imageUrl ? `<img src="${item.imageUrl}" class="news-img">` : '';
+                    const html = `
+                        <div class="news-item">
+                            ${imgHTML}
+                            <div class="news-date">${item.dateStr}</div>
+                            <h3>${item.title}</h3>
+                            <p>${item.content}</p>
+                        </div>
+                    `;
+                    newsContainer.innerHTML += html;
+                });
+            }
+            newsLoading.style.display = 'none';
+        });
+
+        // --- TAB SWITCHING (Global Scope) ---
+        window.openDashTab = function(tabName) {
+            document.querySelectorAll('.dash-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.dash-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            
+            // Highlight button
+            const buttons = document.querySelectorAll('.dash-btn');
+            Array.from(buttons).find(b => b.getAttribute('onclick').includes(tabName)).classList.add('active');
+        };
+
+        // --- SCHEDULE & ASSIGNMENT LOGIC (Local Scope) ---
         const team = ["Keren", "Wendel", "Marven"];
         const year = 2026;
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         
-        // --- LOGIC: SUNDAY SCHEDULE ---
+        // Sunday Schedule Logic
         const allSundays = [];
         let date = new Date(year, 0, 1);
-        
-        // Find first Sunday
         while (date.getDay() !== 0) { date.setDate(date.getDate() + 1); }
 
         let weekCounter = 0;
         while (date.getFullYear() === year) {
             let monitorIndex = weekCounter % 3;
             let liveIndex = (weekCounter + 1) % 3;
-
             allSundays.push({
                 monthIndex: date.getMonth(),
                 day: date.getDate(),
                 monitor: team[monitorIndex],
                 live: team[liveIndex]
             });
-
             date.setDate(date.getDate() + 7);
             weekCounter++;
         }
 
-        // Populate Dropdown
         const selector = document.getElementById('month-selector');
         months.forEach((m, index) => {
             let option = document.createElement("option");
@@ -430,13 +469,11 @@
             option.text = m;
             selector.add(option);
         });
-
-        // Set Default to Current Month
         const currentMonthIndex = new Date().getFullYear() === 2026 ? new Date().getMonth() : 0;
         selector.value = currentMonthIndex;
 
-        // Render Schedule
-        function updateScheduleDisplay() {
+        // Render Functions attached to Window for HTML access
+        window.updateScheduleDisplay = function() {
             const selectedMonthIndex = parseInt(document.getElementById('month-selector').value);
             const container = document.getElementById('weekly-container');
             const title = document.getElementById('schedule-title');
@@ -462,13 +499,11 @@
                 `;
                 container.innerHTML += card;
             });
-        }
+        };
 
-        // --- LOGIC: MONTHLY ASSIGNMENTS (ACCORDION) ---
+        // Monthly Assignments
         function generateAssignmentTab() {
             const container = document.getElementById('assignment-container');
-            
-            // Logic from your file: Jan=Keren(0), Feb=Marven(2)
             const assignments = [0, 2]; 
             const randomPicks = [1, 0, 2, 1, 0, 2, 1, 2, 0, 1]; 
             const fullYearAssignments = assignments.concat(randomPicks);
@@ -496,33 +531,16 @@
             });
         }
 
-        function toggleEdit(id) {
+        window.toggleEdit = function(id) {
             const element = document.getElementById(id);
-            // Close others
             document.querySelectorAll('.edit-item').forEach(item => {
                 if(item.id !== id) item.classList.remove('open');
             });
-            // Toggle clicked
             element.classList.toggle('open');
-        }
+        };
 
-        // --- TAB SWITCHING ---
-        function openDashTab(tabName) {
-            // Hide all content
-            document.querySelectorAll('.dash-content').forEach(c => c.classList.remove('active'));
-            // Remove active class from buttons
-            document.querySelectorAll('.dash-btn').forEach(b => b.classList.remove('active'));
-            
-            // Show content
-            document.getElementById(tabName).classList.add('active');
-            
-            // Highlight button
-            const buttons = document.querySelectorAll('.dash-btn');
-            Array.from(buttons).find(b => b.getAttribute('onclick').includes(tabName)).classList.add('active');
-        }
-
-        // Initialize on Load
-        updateScheduleDisplay();
+        // Init
+        window.updateScheduleDisplay();
         generateAssignmentTab();
 
     </script>
