@@ -6,18 +6,16 @@
     <title>Dashboard | TCF Admin</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Loading Screen Style - Visible by default */
+        /* CRITICAL: Body is hidden by default. Only JS can reveal it. */
+        body { background: #f4f4f4; padding-bottom: 5rem; display: none; }
+        
+        /* Loading Screen Style */
         #authLoading {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #f4f4f4; display: flex; flex-direction: column; justify-content: center; align-items: center;
             font-family: 'Lato', sans-serif; color: #555; z-index: 9999;
         }
 
-        /* Main Content - Hidden by default */
-        #adminContent { display: none; }
-
-        body { background: #f4f4f4; padding-bottom: 5rem; }
-        
         .admin-nav { background: var(--dark-bg); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; }
         .logout-btn { background: transparent; border: 1px solid white; color: white; padding: 5px 15px; cursor: pointer; }
         
@@ -208,6 +206,17 @@
                 <div id="eventList" class="item-list">
                     <p style="padding: 1rem; color: #888;">Loading...</p>
                 </div>
+            </div>
+
+            <!-- CANVA DESIGN PANEL -->
+            <div class="panel">
+                <h2 style="color: var(--primary-gold); margin-bottom: 1rem;">Church Resource</h2>
+                <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
+                    <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+                        src="https://www.canva.com/design/DAGOpEs2pgQ/hC9z-hp6b94XGmfP_o92Jw/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+                    </iframe>
+                </div>
+                <a href="https://www.canva.com/design/DAGOpEs2pgQ/hC9z-hp6b94XGmfP_o92Jw/view?utm_content=DAGOpEs2pgQ&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link" target="_blank" rel="noopener">Church</a> by Wendel Flores
             </div>
 
         </div>
