@@ -1,255 +1,441 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TCF Admin Panel</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TCF Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* CRITICAL: Body is hidden by default. Only JS can reveal it. */
+        body { background: #f4f4f4; padding-bottom: 5rem; display: none; }
+        
+        .admin-nav { background: var(--dark-bg); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; }
+        .logout-btn { background: transparent; border: 1px solid white; color: white; padding: 5px 15px; cursor: pointer; }
+        
+        .admin-container { max-width: 1000px; margin: 2rem auto; padding: 0 20px; }
+        .panel { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        
+        /* Form Styles */
+        .form-grid { display: grid; gap: 1rem; }
+        .row { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .col { flex: 1; min-width: 150px; }
+        
+        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; color: #555; }
+        
+        .btn-submit { background: var(--primary-gold); color: white; padding: 10px 20px; border: none; cursor: pointer; font-weight: bold; margin-top: 1rem; width: 100%; }
+        .btn-submit:hover { background: #b08d45; }
+        
+        .btn-cancel { background: #999; color: white; padding: 10px 20px; border: none; cursor: pointer; font-weight: bold; margin-top: 1rem; display: none; width: 100%; }
 
-<style>
-body { display:none; background:#f4f4f4; padding-bottom:4rem; }
-.admin-nav {
-    background:#111; color:#fff;
-    padding:1rem 5%;
-    display:flex; justify-content:space-between; align-items:center;
-}
-.logout-btn { background:none; border:1px solid #fff; color:#fff; padding:6px 14px; cursor:pointer; }
+        /* List Styles */
+        .list-container { margin-top: 2rem; border-top: 2px solid #eee; padding-top: 1rem; }
+        .list-item { background: #fafafa; border: 1px solid #eee; padding: 1rem; margin-bottom: 0.5rem; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .item-details { flex: 1; }
+        .item-meta { display: block; font-size: 0.8rem; color: #888; margin-top: 4px; }
+        
+        .action-buttons { display: flex; gap: 10px; }
+        .delete-btn { background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .edit-btn { background: #4488ff; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
 
-.admin-container { max-width:1000px; margin:2rem auto; padding:0 20px; }
-.panel { background:#fff; padding:2rem; border-radius:8px; margin-bottom:2rem; }
-
-.form-grid { display:grid; gap:1rem; }
-.row { display:flex; gap:1rem; }
-.col { flex:1; }
-
-input, textarea, select {
-    width:100%; padding:10px;
-    border:1px solid #ddd; border-radius:4px;
-}
-
-.add-btn { background:#C5A059; color:#fff; border:none; padding:12px; font-weight:bold; cursor:pointer; }
-.add-btn.secondary { background:#999; margin-top:6px; }
-
-.item-list { border-top:1px solid #eee; margin-top:1rem; }
-.list-item {
-    display:flex; justify-content:space-between; align-items:center;
-    padding:1rem 0; border-bottom:1px solid #eee;
-}
-.item-meta { font-size:0.85rem; color:#777; }
-
-.action-btn { border:none; padding:6px 10px; cursor:pointer; border-radius:4px; }
-.edit-btn { background:#3498db; color:#fff; }
-.delete-btn { background:#e74c3c; color:#fff; margin-left:5px; }
-</style>
+        .optional-badge { font-size: 0.7rem; color: #999; font-weight: normal; }
+    </style>
 </head>
-
 <body>
 
-<nav class="admin-nav">
-    <h3>TCF Admin Panel</h3>
-    <button id="logoutBtn" class="logout-btn">Log Out</button>
-</nav>
+    <nav class="admin-nav">
+        <h3>TCF Admin Panel</h3>
+        <button id="logoutBtn" class="logout-btn">Log Out</button>
+    </nav>
 
-<div class="admin-container">
+    <div class="admin-container">
 
-<!-- ANNOUNCEMENTS -->
-<div class="panel">
-<h2>Announcement</h2>
+        <!-- EVENTS PANEL -->
+        <div class="panel">
+            <h2 style="margin-bottom: 1rem; color: var(--primary-gold);">Manage Events</h2>
+            <form id="eventForm" class="form-grid">
+                <input type="hidden" id="evt-id"> <!-- Hidden ID for Editing -->
+                
+                <div class="row">
+                    <div class="col">
+                        <label>Event Title</label>
+                        <input type="text" id="evt-title" placeholder="e.g. Sunday Service" required>
+                    </div>
+                    <div class="col">
+                        <label>Image URL</label>
+                        <input type="text" id="evt-img" placeholder="https://...">
+                    </div>
+                </div>
 
-<form id="announcementForm" class="form-grid">
-<input type="text" id="annTitle" placeholder="Title" required>
+                <div class="row">
+                    <div class="col">
+                        <label>Description</label>
+                        <textarea id="evt-desc" rows="3" placeholder="Event details..."></textarea>
+                    </div>
+                </div>
 
-<div class="row">
-<div class="col">
-<label>Date (Optional)</label>
-<input type="date" id="annDate">
-</div>
-<div class="col">
-<label>Schedule (Optional)</label>
-<input type="text" id="annSchedule" placeholder="Everyday, 6:00 PM to 8:00 PM">
-</div>
-</div>
+                <!-- DATE & TIME (Optional) -->
+                <h4 style="margin-top:1rem; border-bottom:1px solid #eee; padding-bottom:5px;">Time & Date Options <span class="optional-badge">(Optional)</span></h4>
+                <div class="row">
+                    <div class="col">
+                        <label>Month (e.g. JAN)</label>
+                        <input type="text" id="evt-month" placeholder="JAN">
+                    </div>
+                    <div class="col">
+                        <label>Day (e.g. 15)</label>
+                        <input type="text" id="evt-day" placeholder="15">
+                    </div>
+                    <div class="col">
+                        <label>Time Label</label>
+                        <input type="text" id="evt-time" placeholder="e.g. 9:00 AM">
+                    </div>
+                </div>
 
-<select id="annMinistry">
-<option>Church Wide</option>
-<option>Todah Max Mom</option>
-<option>Barakong Tatay</option>
-<option>Shabach / Halal</option>
-<option>Yadah Cutie</option>
-<option>Praise Team</option>
-<option>Multimedia</option>
-</select>
+                <!-- WEEKLY RECURRENCE -->
+                <div class="row" style="background: #f9f9f9; padding: 10px; border-radius: 4px;">
+                    <div class="col">
+                        <label>Or Weekly Repeat</label>
+                        <select id="evt-weekday">
+                            <option value="">-- No Repeat --</option>
+                            <option value="Sundays">Every Sunday</option>
+                            <option value="Mondays">Every Monday</option>
+                            <option value="Tuesdays">Every Tuesday</option>
+                            <option value="Wednesdays">Every Wednesday</option>
+                            <option value="Thursdays">Every Thursday</option>
+                            <option value="Fridays">Every Friday</option>
+                            <option value="Saturdays">Every Saturday</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label>Start Time</label>
+                        <input type="time" id="evt-start">
+                    </div>
+                    <div class="col">
+                        <label>End Time</label>
+                        <input type="time" id="evt-end">
+                    </div>
+                </div>
 
-<input type="url" id="annImageLink" placeholder="Image URL (optional)">
-<textarea id="annContent" placeholder="Description" required></textarea>
+                <div class="row">
+                    <button type="submit" class="btn-submit" id="evt-submit-btn">Add Event</button>
+                    <button type="button" class="btn-cancel" id="evt-cancel-btn">Cancel Edit</button>
+                </div>
+            </form>
 
-<button class="add-btn" id="annSubmitBtn">Post Announcement</button>
-<button type="button" class="add-btn secondary" id="annCancelBtn" style="display:none">Cancel Edit</button>
-</form>
+            <div class="list-container" id="eventList">
+                <p>Loading events...</p>
+            </div>
+        </div>
 
-<div id="announcementList" class="item-list"></div>
-</div>
+        <!-- ANNOUNCEMENTS PANEL -->
+        <div class="panel">
+            <h2 style="margin-bottom: 1rem; color: var(--primary-gold);">Manage Announcements</h2>
+            <form id="announcementForm" class="form-grid">
+                <input type="hidden" id="ann-id"> <!-- Hidden ID for Editing -->
 
-<!-- EVENTS -->
-<div class="panel">
-<h2>Event</h2>
+                <div class="row">
+                    <div class="col">
+                        <label>Title</label>
+                        <input type="text" id="ann-title" placeholder="e.g. No Service" required>
+                    </div>
+                    <div class="col">
+                        <label>Ministry / Category</label>
+                        <input type="text" id="ann-ministry" placeholder="e.g. Youth, General" required>
+                    </div>
+                </div>
 
-<form id="eventForm" class="form-grid">
-<input type="text" id="evtTitle" placeholder="Event Name" required>
+                <div class="row">
+                    <div class="col">
+                        <label>Image URL <span class="optional-badge">(Optional)</span></label>
+                        <input type="text" id="ann-img" placeholder="https://...">
+                    </div>
+                    <div class="col">
+                        <label>Date Label <span class="optional-badge">(Optional)</span></label>
+                        <input type="text" id="ann-date" placeholder="e.g. Oct 25, 2026">
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <label>Content</label>
+                        <textarea id="ann-content" rows="3" placeholder="Announcement details..." required></textarea>
+                    </div>
+                </div>
 
-<div class="row">
-<div class="col">
-<label>Date (Optional)</label>
-<input type="date" id="evtDate">
-</div>
-<div class="col">
-<label>Schedule (Optional)</label>
-<input type="text" id="evtSchedule" placeholder="Saturday, 4:00 PM to 7:00 PM">
-</div>
-</div>
+                <div class="row">
+                    <button type="submit" class="btn-submit" id="ann-submit-btn">Post Announcement</button>
+                    <button type="button" class="btn-cancel" id="ann-cancel-btn">Cancel Edit</button>
+                </div>
+            </form>
 
-<input type="url" id="evtImage" placeholder="Image URL (optional)">
-<textarea id="evtDesc" placeholder="Event details" required></textarea>
+            <div class="list-container" id="announcementList">
+                <p>Loading announcements...</p>
+            </div>
+        </div>
 
-<button class="add-btn" id="evtSubmitBtn">Add Event</button>
-<button type="button" class="add-btn secondary" id="evtCancelBtn" style="display:none">Cancel Edit</button>
-</form>
+    </div>
 
-<div id="eventList" class="item-list"></div>
-</div>
+    <script type="module">
+        import { auth, db, signOut, onAuthStateChanged, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, orderBy, updateDoc } from './firebase-config.js';
 
-</div>
+        // 1. Auth Check
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.body.style.display = 'block'; // Reveal content
+                loadData();
+            } else {
+                window.location.href = "login.html";
+            }
+        });
 
-<script type="module">
-import {
-auth, db, signOut, onAuthStateChanged,
-collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot
-} from './firebase-config.js';
+        // 2. Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = "login.html";
+        });
 
-onAuthStateChanged(auth, user=>{
-    if(user) document.body.style.display="block";
-    else location.href="login.html";
-});
+        // ================= EVENTS LOGIC =================
+        const eventForm = document.getElementById('eventForm');
+        
+        eventForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('evt-submit-btn');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Saving...";
+            submitBtn.disabled = true;
 
-logoutBtn.onclick=()=>signOut(auth);
+            const id = document.getElementById('evt-id').value;
+            
+            const eventData = {
+                title: document.getElementById('evt-title').value,
+                imageUrl: document.getElementById('evt-img').value,
+                desc: document.getElementById('evt-desc').value,
+                month: document.getElementById('evt-month').value,
+                day: document.getElementById('evt-day').value,
+                time: document.getElementById('evt-time').value,
+                // New Schedule Fields
+                weekday: document.getElementById('evt-weekday').value,
+                startTime: document.getElementById('evt-start').value,
+                endTime: document.getElementById('evt-end').value,
+                createdAt: Date.now()
+            };
 
-let editingAnn=null;
-let editingEvt=null;
+            try {
+                if (id) {
+                    // Update existing
+                    // Remove createdAt so we don't mess up sorting if using that, or keep it.
+                    // Usually we don't want to change createdAt on edit, but we might want 'updatedAt'.
+                    // For simplicity, we just update the fields.
+                    const { createdAt, ...updateData } = eventData; 
+                    await updateDoc(doc(db, "events", id), updateData);
+                    alert("Event updated successfully!");
+                } else {
+                    // Add new
+                    await addDoc(collection(db, "events"), eventData);
+                    alert("Event added successfully!");
+                }
+                resetEventForm();
+            } catch (error) {
+                console.error(error);
+                alert("Error saving event: " + error.message);
+            }
 
-function resetAnn(){
-    announcementForm.reset();
-    editingAnn=null;
-    annSubmitBtn.innerText="Post Announcement";
-    annCancelBtn.style.display="none";
-}
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
+        });
 
-function resetEvt(){
-    eventForm.reset();
-    editingEvt=null;
-    evtSubmitBtn.innerText="Add Event";
-    evtCancelBtn.style.display="none";
-}
+        // Cancel Edit Button
+        document.getElementById('evt-cancel-btn').addEventListener('click', resetEventForm);
 
-annCancelBtn.onclick=resetAnn;
-evtCancelBtn.onclick=resetEvt;
+        function resetEventForm() {
+            eventForm.reset();
+            document.getElementById('evt-id').value = "";
+            document.getElementById('evt-submit-btn').innerText = "Add Event";
+            document.getElementById('evt-cancel-btn').style.display = "none";
+        }
 
-announcementForm.onsubmit=async e=>{
-e.preventDefault();
-const data={
-title:annTitle.value,
-dateStr:annDate.value?new Date(annDate.value).toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"}):"",
-schedule:annSchedule.value||"",
-ministry:annMinistry.value,
-content:annContent.value,
-imageUrl:annImageLink.value||"",
-createdAt:Date.now()
-};
-if(editingAnn)
-await updateDoc(doc(db,"announcements",editingAnn),data);
-else
-await addDoc(collection(db,"announcements"),data);
-resetAnn();
-};
+        // ================= ANNOUNCEMENTS LOGIC =================
+        const annForm = document.getElementById('announcementForm');
 
-eventForm.onsubmit=async e=>{
-e.preventDefault();
-const d=evtDate.value?new Date(evtDate.value):null;
-const data={
-title:evtTitle.value,
-month:d?d.toLocaleDateString("en-US",{month:"short"}).toUpperCase():"",
-day:d?String(d.getDate()).padStart(2,"0"):"",
-schedule:evtSchedule.value||"",
-desc:evtDesc.value,
-imageUrl:evtImage.value||"",
-createdAt:Date.now()
-};
-if(editingEvt)
-await updateDoc(doc(db,"events",editingEvt),data);
-else
-await addDoc(collection(db,"events"),data);
-resetEvt();
-};
+        annForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('ann-submit-btn');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Saving...";
+            submitBtn.disabled = true;
 
-onSnapshot(collection(db,"announcements"),snap=>{
-announcementList.innerHTML="";
-snap.forEach(s=>{
-const d=s.data();
-const div=document.createElement("div");
-div.className="list-item";
-div.innerHTML=`
-<div>
-<strong>${d.title}</strong>
-<div class="item-meta">${d.ministry} ${d.schedule? "• "+d.schedule:""}</div>
-</div>
-<div>
-<button class="action-btn edit-btn">Edit</button>
-<button class="action-btn delete-btn">Delete</button>
-</div>`;
-div.querySelector(".edit-btn").onclick=()=>{
-editingAnn=s.id;
-annTitle.value=d.title;
-annDate.value="";
-annSchedule.value=d.schedule||"";
-annMinistry.value=d.ministry;
-annContent.value=d.content;
-annImageLink.value=d.imageUrl||"";
-annSubmitBtn.innerText="Update Announcement";
-annCancelBtn.style.display="block";
-};
-div.querySelector(".delete-btn").onclick=()=>confirm("Delete?")&&deleteDoc(doc(db,"announcements",s.id));
-announcementList.appendChild(div);
-});
-});
+            const id = document.getElementById('ann-id').value;
 
-onSnapshot(collection(db,"events"),snap=>{
-eventList.innerHTML="";
-snap.forEach(s=>{
-const d=s.data();
-const div=document.createElement("div");
-div.className="list-item";
-div.innerHTML=`
-<div>
-<strong>${d.title}</strong>
-<div class="item-meta">${d.schedule||""}</div>
-</div>
-<div>
-<button class="action-btn edit-btn">Edit</button>
-<button class="action-btn delete-btn">Delete</button>
-</div>`;
-div.querySelector(".edit-btn").onclick=()=>{
-editingEvt=s.id;
-evtTitle.value=d.title;
-evtSchedule.value=d.schedule||"";
-evtDesc.value=d.desc;
-evtImage.value=d.imageUrl||"";
-evtSubmitBtn.innerText="Update Event";
-evtCancelBtn.style.display="block";
-};
-div.querySelector(".delete-btn").onclick=()=>confirm("Delete?")&&deleteDoc(doc(db,"events",s.id));
-eventList.appendChild(div);
-});
-});
-</script>
+            const annData = {
+                title: document.getElementById('ann-title').value,
+                ministry: document.getElementById('ann-ministry').value,
+                imageUrl: document.getElementById('ann-img').value,
+                dateStr: document.getElementById('ann-date').value,
+                content: document.getElementById('ann-content').value,
+                createdAt: Date.now()
+            };
 
+            try {
+                if (id) {
+                    const { createdAt, ...updateData } = annData;
+                    await updateDoc(doc(db, "announcements", id), updateData);
+                    alert("Announcement updated!");
+                } else {
+                    await addDoc(collection(db, "announcements"), annData);
+                    alert("Announcement posted!");
+                }
+                resetAnnForm();
+            } catch (error) {
+                console.error(error);
+                alert("Error: " + error.message);
+            }
+
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
+        });
+
+        document.getElementById('ann-cancel-btn').addEventListener('click', resetAnnForm);
+
+        function resetAnnForm() {
+            annForm.reset();
+            document.getElementById('ann-id').value = "";
+            document.getElementById('ann-submit-btn').innerText = "Post Announcement";
+            document.getElementById('ann-cancel-btn').style.display = "none";
+        }
+
+        // ================= REAL-TIME LISTENERS & RENDER =================
+
+        function loadData() {
+            // Events
+            const qEvt = query(collection(db, "events")); // You can add orderBy here if indexes are ready
+            onSnapshot(qEvt, (snapshot) => {
+                const list = document.getElementById('eventList');
+                list.innerHTML = "";
+                if (snapshot.empty) { list.innerHTML = "<p style='padding:1rem'>No events found.</p>"; return; }
+
+                let items = [];
+                snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+                // Sort client side by createdAt desc
+                items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                items.forEach(data => {
+                    const div = document.createElement('div');
+                    div.className = "list-item";
+                    
+                    // Format display string
+                    let timeInfo = "";
+                    if (data.month && data.day) {
+                        timeInfo = `${data.month} ${data.day}`;
+                    } else if (data.weekday) {
+                        timeInfo = `${data.weekday}`;
+                    }
+                    
+                    if (data.time) timeInfo += ` | ${data.time}`;
+                    else if (data.startTime && data.endTime) timeInfo += ` | ${data.startTime} - ${data.endTime}`;
+
+                    div.innerHTML = `
+                        <div class="item-details">
+                            <strong>${data.title}</strong>
+                            <span class="item-meta">${timeInfo || "No Date/Time Set"}</span>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="edit-btn edit-evt-btn" data-id="${data.id}">Edit</button>
+                            <button class="delete-btn delete-evt-btn" data-id="${data.id}">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+                
+                // Attach Event Listeners
+                document.querySelectorAll('.delete-evt-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        if(confirm("Delete this event?")) await deleteDoc(doc(db, "events", e.target.dataset.id));
+                    });
+                });
+                
+                document.querySelectorAll('.edit-evt-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.target.dataset.id;
+                        const item = items.find(i => i.id === id);
+                        if(item) loadEventIntoForm(item);
+                    });
+                });
+            });
+
+            // Announcements
+            const qAnn = query(collection(db, "announcements"));
+            onSnapshot(qAnn, (snapshot) => {
+                const list = document.getElementById('announcementList');
+                list.innerHTML = "";
+                if (snapshot.empty) { list.innerHTML = "<p style='padding:1rem'>No announcements found.</p>"; return; }
+
+                let items = [];
+                snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+                items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                items.forEach(data => {
+                    const div = document.createElement('div');
+                    div.className = "list-item";
+                    div.innerHTML = `
+                        <div class="item-details">
+                            <strong>${data.title}</strong>
+                            <span class="item-meta">${data.dateStr || "No Date"} | ${data.ministry}</span>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="edit-btn edit-ann-btn" data-id="${data.id}">Edit</button>
+                            <button class="delete-btn delete-ann-btn" data-id="${data.id}">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+
+                document.querySelectorAll('.delete-ann-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        if(confirm("Delete this announcement?")) await deleteDoc(doc(db, "announcements", e.target.dataset.id));
+                    });
+                });
+
+                document.querySelectorAll('.edit-ann-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.target.dataset.id;
+                        const item = items.find(i => i.id === id);
+                        if(item) loadAnnIntoForm(item);
+                    });
+                });
+            });
+        }
+
+        function loadEventIntoForm(data) {
+            document.getElementById('evt-id').value = data.id;
+            document.getElementById('evt-title').value = data.title || "";
+            document.getElementById('evt-img').value = data.imageUrl || "";
+            document.getElementById('evt-desc').value = data.desc || "";
+            document.getElementById('evt-month').value = data.month || "";
+            document.getElementById('evt-day').value = data.day || "";
+            document.getElementById('evt-time').value = data.time || "";
+            document.getElementById('evt-weekday').value = data.weekday || "";
+            document.getElementById('evt-start').value = data.startTime || "";
+            document.getElementById('evt-end').value = data.endTime || "";
+
+            document.getElementById('evt-submit-btn').innerText = "Update Event";
+            document.getElementById('evt-cancel-btn').style.display = "inline-block";
+            window.scrollTo(0, document.querySelector('.admin-container').offsetTop);
+        }
+
+        function loadAnnIntoForm(data) {
+            document.getElementById('ann-id').value = data.id;
+            document.getElementById('ann-title').value = data.title || "";
+            document.getElementById('ann-ministry').value = data.ministry || "";
+            document.getElementById('ann-img').value = data.imageUrl || "";
+            document.getElementById('ann-date').value = data.dateStr || "";
+            document.getElementById('ann-content').value = data.content || "";
+
+            document.getElementById('ann-submit-btn').innerText = "Update Announcement";
+            document.getElementById('ann-cancel-btn').style.display = "inline-block";
+            // Scroll to announcement section
+            document.getElementById('announcementForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+    </script>
 </body>
 </html>
